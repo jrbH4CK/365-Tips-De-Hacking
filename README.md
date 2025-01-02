@@ -1,7 +1,7 @@
 # 365 Tips De Hacking
 En este repo quiero contribuir una vez al día, diariamente publicare una técnica o tip que aprenda, la meta es estudiar diario y aprender algo nuevo cada día, esto lo hago como un registro y por si en algún momento vuelvo a utilizar algo de aqui :p 
 ## Índice
-- [Introducción](#)
+- [Tip 1](#https://github.com/jrbH4CK/365-Tips-De-Hacking/blob/main/README.md#tip-1-lectura-de-archivos-desde-un-xss)
 ## Tip #1: Lectura de archivos desde un XSS
 Al descubrir un XSS se puede realizar la lectura de archivos locales mediante peticiones a un servidor web propio, la idea es enviar el XSS payload a un usuario que si pueda acceder a ciertos archivos del servidor, por ejemplo el archivo .htpasswd, a continuación muestro el payload:
 ```javascript
