@@ -61,5 +61,5 @@ iso.3.6.1.2.1.1.3.0 = Timeticks: (1394652) 3:52:26.52
 iso.3.6.1.2.1.1.5.0 = STRING: "Daloradius server"
 iso.3.6.1.2.1.1.6.0 = STRING: "Nevada, U.S.A."
 ```
-## Tip 2: Puertos internos abiertos
+## Tip #3: Puertos internos abiertos
 Despues de lograr acceso a un equipo es conveniente revisar que puertos abuertos estan en uso, esto por que tal vez uticen softwares que solo son visibles desde el interior a la red, para hacer esto utizamos la herramienta netstat:
