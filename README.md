@@ -4,6 +4,7 @@ En este repo quiero contribuir una vez al día, diariamente publicare una técni
 - [Tip 1:  Lectura de archivos desde un XSS](#tip-1-lectura-de-archivos-desde-un-xss)
 - [Tip 2:  Siempre escanea los puertos UDP](#tip-2-siempre-escanea-los-puertos-udp)
 - [Tip 3:  Puertos internos abiertos](#tip-3-puertos-internos-abiertos)
+- [Tip 4:  Comando SUDO](#tip-4-comando-sudo)
 ## Tip #1: Lectura de archivos desde un XSS
 Al descubrir un XSS se puede realizar la lectura de archivos locales mediante peticiones a un servidor web propio, la idea es enviar el XSS payload a un usuario que si pueda acceder a ciertos archivos del servidor, por ejemplo el archivo .htpasswd, a continuación muestro el payload:
 ```javascript
@@ -82,3 +83,24 @@ X-Powered-By: PHP/7.4.3-4ubuntu2.24
 Content-type: text/html; charset=UTF-8
 ```
 Como se puede observar en el puerto 8080 existe un servidor web no visible desde el exterior, es probable encontrar distitas vulnerabilidades ahi.
+
+## Tip #4:  Comando SUDO
+El comando sudo nos permite ejecutar programas como super user, es decir ```root```, esto se puede utilizar para escalar privilegios en el sistema, una buena practica despues de obtener acceso al sistema es revisar que programas podemos ejecutar como root sin necesidad de proporcionar una contraseña, en el ejemplo a continuación el usuario puede ejecutar todos los comandos como super usuario pero tiene que introducir su contraseña antes:
+```bash
+┌──(jorge㉿pentest)-[~]
+└─$ sudo -l
+Matching Defaults entries for svcMosh on localhost:
+    env_reset, mail_badpass, secure_path=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin\:/snap/bin, use_pty
+
+User jorge may run the following commands on pentest:
+    (ALL : ALL) ALL
+```
+A diferencia del usuario anterior el ejemplo a continuación puede ejecutar un programa como superusuario sin necesidad de proporcionar contraseña, despues de ver la ruta y el programa que es podriamos intentar modificarlo para lograr escalar privilegios:
+```bash
+alberto@local:~$ sudo -l
+Matching Defaults entries for svcMosh on localhost:
+    env_reset, mail_badpass, secure_path=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin\:/snap/bin, use_pty
+
+User alberto may run the following commands on localhost:
+    (ALL) NOPASSWD: /usr/bin/mosh-server
+```
