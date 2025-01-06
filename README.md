@@ -62,4 +62,23 @@ iso.3.6.1.2.1.1.5.0 = STRING: "Daloradius server"
 iso.3.6.1.2.1.1.6.0 = STRING: "Nevada, U.S.A."
 ```
 ## Tip #3: Puertos internos abiertos
-Despues de lograr acceso a un equipo es conveniente revisar que puertos abuertos estan en uso, esto por que tal vez uticen softwares que solo son visibles desde el interior a la red, para hacer esto utizamos la herramienta netstat:
+Despues de lograr acceso a un equipo es conveniente revisar que puertos abuertos estan en uso, esto por que tal vez utilicen softwares que solo son visibles desde el interior a la red, para hacer esto utizamos la herramienta ```netstat```:
+```bash
+alberto@local:~$ netstat -tln
+Active Internet connections (only servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0      0 127.0.0.1:8080          0.0.0.0:*               LISTEN     
+tcp        0      0 127.0.0.53:53           0.0.0.0:*               LISTEN     
+tcp        0      0 0.0.0.0:22              0.0.0.0:*               LISTEN     
+tcp6       0      0 ::1:8080                :::*                    LISTEN     
+tcp6       0      0 :::80                   :::*                    LISTEN     
+tcp6       0      0 :::22                   :::*                    LISTEN     
+alberto@local:~$ curl -I 127.0.0.1:8080
+HTTP/1.1 200 OK
+Host: 127.0.0.1:8080
+Date: Mon, 06 Jan 2025 05:05:05 GMT
+Connection: close
+X-Powered-By: PHP/7.4.3-4ubuntu2.24
+Content-type: text/html; charset=UTF-8
+```
+Como se puede observar en el puerto 8080 existe un servidor web no visible desde el exterior, es probable encontrar distitas vulnerabilidades ahi.
