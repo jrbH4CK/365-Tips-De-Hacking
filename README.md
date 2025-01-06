@@ -89,7 +89,7 @@ El comando sudo nos permite ejecutar programas como super user, es decir ```root
 ```bash
 ┌──(jorge㉿pentest)-[~]
 └─$ sudo -l
-Matching Defaults entries for svcMosh on localhost:
+Matching Defaults entries for jorge on localhost:
     env_reset, mail_badpass, secure_path=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin\:/snap/bin, use_pty
 
 User jorge may run the following commands on pentest:
@@ -98,7 +98,7 @@ User jorge may run the following commands on pentest:
 A diferencia del usuario anterior el ejemplo a continuación puede ejecutar un programa como superusuario sin necesidad de proporcionar contraseña, despues de ver la ruta y el programa que es podriamos intentar modificarlo para lograr escalar privilegios:
 ```bash
 alberto@local:~$ sudo -l
-Matching Defaults entries for svcMosh on localhost:
+Matching Defaults entries for alberto on localhost:
     env_reset, mail_badpass, secure_path=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin\:/snap/bin, use_pty
 
 User alberto may run the following commands on localhost:
