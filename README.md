@@ -84,7 +84,7 @@ Content-type: text/html; charset=UTF-8
 ```
 Como se puede observar en el puerto 8080 existe un servidor web no visible desde el exterior, es probable encontrar distitas vulnerabilidades ahi.
 
-## Tip #4:  Comando SUDO
+## Tip #4: Comando SUDO
 El comando sudo nos permite ejecutar programas como super user, es decir ```root```, esto se puede utilizar para escalar privilegios en el sistema, una buena practica despues de obtener acceso al sistema es revisar que programas podemos ejecutar como root sin necesidad de proporcionar una contraseña, en el ejemplo a continuación el usuario puede ejecutar todos los comandos como super usuario pero tiene que introducir su contraseña antes:
 ```bash
 ┌──(jorge㉿pentest)-[~]
