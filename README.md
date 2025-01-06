@@ -5,6 +5,7 @@ En este repo quiero contribuir una vez al día, diariamente publicare una técni
 - [Tip 2:  Siempre escanea los puertos UDP](#tip-2-siempre-escanea-los-puertos-udp)
 - [Tip 3:  Puertos internos abiertos](#tip-3-puertos-internos-abiertos)
 - [Tip 4:  Comando SUDO](#tip-4-comando-sudo)
+- [Tip 5:  Información sensible en /.git publicos](#tip-5-información-sensible-en-git-publicos)
 ## Tip #1: Lectura de archivos desde un XSS
 Al descubrir un XSS se puede realizar la lectura de archivos locales mediante peticiones a un servidor web propio, la idea es enviar el XSS payload a un usuario que si pueda acceder a ciertos archivos del servidor, por ejemplo el archivo .htpasswd, a continuación muestro el payload:
 ```javascript
@@ -104,3 +105,22 @@ Matching Defaults entries for alberto on localhost:
 User alberto may run the following commands on localhost:
     (ALL) NOPASSWD: /usr/bin/mosh-server
 ```
+## Tip #5: Información sensible en /.git publicos
+Al realizar fuzzing a una web a veces se encuentra el directorio ```.git``` publico, aqui se puede encontrar información sensible como contraseñas, tokens y codigo fuente, existen dos alternativas para analizar este directorio:
+### Herramientas git
+Primero descargaremos el directorio:
+```bash
+wget -r http://www.target.com/.git/
+```
+Despues dentro del directorio descargado utilizaremos ```diff```:
+```bash
+git diff
+```
+Despues de este comando podremos obsevar todas las modificaciones que se han hecho a los archivos, esto puede ser util por si en algun momento hubo contraseñas o tokens en el codigo y fueron eliminadas se pueden recuperar desde ahi.
+
+### Generar el codigo fuente original
+Existe una herramienta capaz de extraer los archivos del proyecto y luego utilizando ```zlib``` escribe el codigo fuente segun la estructura orignal, esto es muy util ya que se pueden encontrar muchos archivos con contraseñas:
+```bash
+python3 GitHack.py http://www.target.com/.git/
+```
+Esta herramienta esta disponible aqui -> https://github.com/lijiejie/GitHack
