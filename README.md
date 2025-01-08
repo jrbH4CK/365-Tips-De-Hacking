@@ -6,7 +6,7 @@ En este repo quiero contribuir una vez al día, diariamente publicare una técni
 - [Tip 3:  Puertos internos abiertos](#tip-3-puertos-internos-abiertos)
 - [Tip 4:  Comando SUDO](#tip-4-comando-sudo)
 - [Tip 5:  Información sensible en /.git publicos](#tip-5-información-sensible-en-git-publicos)
-- [Tip 6:  Pivoting con metasploit](#pivoting-con-metasploit)
+- [Tip 6:  Pivoting con metasploit](#tip-6-pivoting-con-metasploit)
 ## Tip #1: Lectura de archivos desde un XSS
 Al descubrir un XSS se puede realizar la lectura de archivos locales mediante peticiones a un servidor web propio, la idea es enviar el XSS payload a un usuario que si pueda acceder a ciertos archivos del servidor, por ejemplo el archivo .htpasswd, a continuación muestro el payload:
 ```javascript
