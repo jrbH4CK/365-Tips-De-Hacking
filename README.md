@@ -6,6 +6,7 @@ En este repo quiero contribuir una vez al día, diariamente publicare una técni
 - [Tip 3:  Puertos internos abiertos](#tip-3-puertos-internos-abiertos)
 - [Tip 4:  Comando SUDO](#tip-4-comando-sudo)
 - [Tip 5:  Información sensible en /.git publicos](#tip-5-información-sensible-en-git-publicos)
+- [Tip 6:  Pivoting con metasploit](#pivoting-con-metasploit)
 ## Tip #1: Lectura de archivos desde un XSS
 Al descubrir un XSS se puede realizar la lectura de archivos locales mediante peticiones a un servidor web propio, la idea es enviar el XSS payload a un usuario que si pueda acceder a ciertos archivos del servidor, por ejemplo el archivo .htpasswd, a continuación muestro el payload:
 ```javascript
@@ -124,3 +125,14 @@ Existe una herramienta capaz de extraer los archivos del proyecto y luego utiliz
 python3 GitHack.py http://www.target.com/.git/
 ```
 Esta herramienta esta disponible aqui -> https://github.com/lijiejie/GitHack
+
+## Tip #6: Pivoting con metasploit
+Se le conoce como pivoting a la tecnica en la cual utilizas una maquina intermedia que tiene conectividad en dos segmentos de red para hacer llegar ataques desde tu maquina original, el esquema lo explica mejor:
+[Meter esquema aqui]
+Para realizar esto es importante primero obtener una sesión de meterpreter en la maquina pivote, una vez hecho esto, procederemos a añadir la ruta:
+```bash
+
+```
+Ahora con el auxiliar ```nombre del auxiliar``` y con el archivo de configuracion de ```proxichains``` los configuraremos para que utilizen el mismo puerto:
+
+Ahora si podemos utilizar nuestra maquina para explotar la maquina no visible a traves de la maquina pivote, aqui se realiza el escaneo de puertos con ```nmap```:
