@@ -136,3 +136,5 @@ Para realizar esto es importante primero obtener una sesión de meterpreter en l
 Ahora con el auxiliar ```nombre del auxiliar``` y con el archivo de configuracion de ```proxichains``` los configuraremos para que utilizen el mismo puerto:
 
 Ahora si podemos utilizar nuestra maquina para explotar la maquina no visible a traves de la maquina pivote, aqui se realiza el escaneo de puertos con ```nmap```:
+
+## Tip #7: Uso de smbclient con el hash NTLM
