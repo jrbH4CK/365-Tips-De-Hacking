@@ -9,6 +9,7 @@ En este repo quiero contribuir una vez al día, diariamente publicare una técni
 - [Tip 6:  Pivoting con metasploit](#tip-6-pivoting-con-metasploit)
 - [Tip 7: Uso de smbclient con el hash NTLM](#tip-7-Uso-de-smbclient-con-el-hash-ntlm)
 - [Tip 8:  Acceso a cualquier archivo en Windows con SeBackupPrivilege](#tip-8-Acceso-a-cualquier-archivo-en-Windows-con-SeBackupPrivilege)
+- [Tip 9:  Port Forwarding y pivoting desde metasploit](#tip-9-port-forwarding-y-pivoting-desde-metasploit)
 ## Tip #1: Lectura de archivos desde un XSS
 Al descubrir un XSS se puede realizar la lectura de archivos locales mediante peticiones a un servidor web propio, la idea es enviar el XSS payload a un usuario que si pueda acceder a ciertos archivos del servidor, por ejemplo el archivo .htpasswd, a continuación muestro el payload:
 ```javascript
@@ -140,4 +141,5 @@ Ahora con el auxiliar ```nombre del auxiliar``` y con el archivo de configuracio
 Ahora si podemos utilizar nuestra maquina para explotar la maquina no visible a traves de la maquina pivote, aqui se realiza el escaneo de puertos con ```nmap```:
 
 ## Tip #7: Uso de smbclient con el hash NTLM
-## Tip #8:  Acceso a cualquier archivo en Windows con SeBackupPrivilege
+## Tip #8: Acceso a cualquier archivo en Windows con SeBackupPrivilege
+## Tip #9: Port Forwarding y pivoting desde metasploit
