@@ -132,10 +132,11 @@ Esta herramienta esta disponible aqui -> https://github.com/lijiejie/GitHack
 
 ## Tip #6: Pivoting con metasploit
 Se le conoce como pivoting a la tecnica en la cual utilizas una maquina intermedia que tiene conectividad en dos segmentos de red para hacer llegar ataques desde tu maquina original, el esquema lo explica mejor:
-[Pivote](./img/pivoteo.png)
+
+![Pivote](./img/pivoteo.png)
 
 Lo primero que debemos observar es que la IP de nuestra maquina de atacante es la ```10.10.48.3```:
-````bash
+```bash
 root@pentest:~# ip address
 1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
     link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
