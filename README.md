@@ -9,7 +9,7 @@ En este repo quiero contribuir una vez al día, diariamente publicare una técni
 - [Tip 6:  Pivoting con metasploit](#tip-6-pivoting-con-metasploit)
 - [Tip 7: Uso de smbclient con el hash NTLM](#tip-7-Uso-de-smbclient-con-el-hash-ntlm)
 - [Tip 8:  Acceso a cualquier archivo en Windows con SeBackupPrivilege](#tip-8-Acceso-a-cualquier-archivo-en-Windows-con-SeBackupPrivilege)
-- [Tip 9:  Port Forwarding y pivoting desde metasploit](#tip-9-port-forwarding-y-pivoting-desde-metasploit)
+- [Tip 9:  Port Forwarding con SSH](#tip-9-port-forwarding-con-ssh)
 - [Tip 10: Fuerza bruta con hydra al protocolo HTTP](#tip-10-fuerza-bruta-con-hydra-al-protocolo-http)
 ## Tip #1: Lectura de archivos desde un XSS
 Al descubrir un XSS se puede realizar la lectura de archivos locales mediante peticiones a un servidor web propio, la idea es enviar el XSS payload a un usuario que si pueda acceder a ciertos archivos del servidor, por ejemplo el archivo .htpasswd, a continuación muestro el payload:
@@ -399,4 +399,69 @@ Mode                LastWriteTime     Length Name
 PS C:\Temp> type .\secreto.txt                                                                                                                              
 NO DEBERIAS VER ESTO SI NO TIENES LOS PERMISOS ADECUADOS, SE INFORMARA AL ADMINISTRADOR CUALQUIER ANOMALIA
 ```
-## Tip #9: Port Forwarding y pivoting desde metasploit
+## Tip #9: Port Forwarding con SSH
+En ocaciones logramos obtener algunas credenciales y conectarnos a una maquina remota por medio de SSH, cuando esto ocurre a veces hay servicios locales que son vulnerables, para poder explotarlos con exito debemos hacer un tunel desde el puerto local de la maquina hacia la de nosotros, primero veamos que en la maquina victima hay un servidor web en el puerto ```8080``` que no es visible desde fuera:
+### Maquina atacante
+Desde nuestra maquina solo observamos abiertos el puerto ```22``` y ```5000```:
+```bash
+Nmap scan report for 10.10.22.49
+Host is up (0.076s latency).
+Not shown: 65533 closed tcp ports (reset)
+PORT     STATE SERVICE
+22/tcp   open  ssh
+5000/tcp open  upnp
+
+Read data files from: /usr/share/nmap
+```
+Ademas si realizamos un escaneo de nuestra maquina en el puerto ```1234``` lo encontraremos cerrado:
+```bash
+┌──(jorge㉿pentest)-[~]
+└─$ sudo nmap -p1234 -sS -n -v -Pn localhost
+Host discovery disabled (-Pn). All addresses will be marked 'up' and scan times may be slower.
+Starting Nmap 7.94SVN ( https://nmap.org ) at 2025-01-13 15:30 CST
+Initiating SYN Stealth Scan at 15:30
+Scanning localhost (127.0.0.1) [1 port]
+Completed SYN Stealth Scan at 15:30, 0.03s elapsed (1 total ports)
+Nmap scan report for localhost (127.0.0.1)
+Host is up (0.00012s latency).
+Other addresses for localhost (not scanned): ::1
+
+PORT     STATE  SERVICE
+1234/tcp closed hotline
+
+Read data files from: /usr/share/nmap
+```
+### Maquina victima
+Sin embargo, una vez dentro de la maquina mediante SSH y usando el **Tip numero 3** de este mismo repo, podemos obsevar los puertos internos:
+```bash
+roger@test:~$ netstat -tln
+Active Internet connections (only servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0      0 127.0.0.53:53           0.0.0.0:*               LISTEN     
+tcp        0      0 0.0.0.0:22              0.0.0.0:*               LISTEN     
+tcp        0      0 0.0.0.0:80              0.0.0.0:*               LISTEN     
+tcp        0      0 127.0.0.1:8080          0.0.0.0:*               LISTEN     
+tcp6       0      0 :::22                   :::*                    LISTEN   
+```
+Es por ello que iniciaremos un port forwarding desde la maquina en el puerto ```8080``` hacia la de nosotros en el puerto ```1234```, para hacer esto debemos especificarlo con el parametro ```-L``` de SSH:
+```bash
+┌──(jorge㉿pentest)-[~]
+└─$ ssh roger@10.10.22.49 -L 1234:127.0.0.1:8080
+roger@10.10.22.49's password: 
+Welcome to Ubuntu 20.04.6 LTS (GNU/Linux 5.4.0-196-generic x86_64)
+```
+Ahora si escaneamos nuestro puerto ```1234``` observamos que el puerto se encuentra abierto y tambien que se trata de un servicio http:
+```bash
+┌──(jorge㉿pentest)-[~]
+└─$ sudo nmap -p1234 -sV -n -v -Pn localhost
+
+Nmap scan report for localhost (127.0.0.1)
+Host is up (0.000072s latency).
+Other addresses for localhost (not scanned): ::1
+
+PORT     STATE SERVICE VERSION
+1234/tcp open  http    aiohttp 3.9.1 (Python 3.9)
+
+Read data files from: /usr/share/nmap
+```
+Ahora cuando queramos iniciar un ataque al puerto ```8080``` de la maquina remota todos los comandos los debemos enviar a nuestro puerto local ```1234``` y SSH se encargara del resto.
