@@ -432,7 +432,7 @@ PORT     STATE  SERVICE
 Read data files from: /usr/share/nmap
 ```
 ### Maquina victima
-Sin embargo, una vez dentro de la maquina mediante SSH y usando el **Tip numero 3** de este mismo repo, podemos obsevar los puertos internos:
+Sin embargo, una vez dentro de la maquina mediante SSH y usando el **Tip #3** de este mismo repo, podemos obsevar los puertos internos:
 ```bash
 roger@test:~$ netstat -tln
 Active Internet connections (only servers)
@@ -443,6 +443,7 @@ tcp        0      0 0.0.0.0:80              0.0.0.0:*               LISTEN
 tcp        0      0 127.0.0.1:8080          0.0.0.0:*               LISTEN     
 tcp6       0      0 :::22                   :::*                    LISTEN   
 ```
+### Port forwarding
 Es por ello que iniciaremos un port forwarding desde la maquina en el puerto ```8080``` hacia la de nosotros en el puerto ```1234```, para hacer esto debemos especificarlo con el parametro ```-L``` de SSH:
 ```bash
 ┌──(jorge㉿pentest)-[~]
@@ -465,3 +466,5 @@ PORT     STATE SERVICE VERSION
 Read data files from: /usr/share/nmap
 ```
 Ahora cuando queramos iniciar un ataque al puerto ```8080``` de la maquina remota todos los comandos los debemos enviar a nuestro puerto local ```1234``` y SSH se encargara del resto.
+
+## Tip #10: Fuerza bruta con hydra al protocolo HTTP
