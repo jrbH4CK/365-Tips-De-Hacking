@@ -468,3 +468,11 @@ Read data files from: /usr/share/nmap
 Ahora cuando queramos iniciar un ataque al puerto ```8080``` de la maquina remota todos los comandos los debemos enviar a nuestro puerto local ```1234``` y SSH se encargara del resto.
 
 ## Tip #10: Fuerza bruta con hydra al protocolo HTTP
+## Tip #11: Busqueda de informacion con grep
+```bash
+root@pentest:/app# ls
+app.py  instance  static  templates  uploads
+
+root@pentest:/app/# grep -r password
+Binary file instance/database.db matches
+```
