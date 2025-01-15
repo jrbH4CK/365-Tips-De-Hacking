@@ -507,7 +507,7 @@ MSSQL       10.10.X.X     1433   DC01             table_name:spt_monitor
 MSSQL       10.10.X.X     1433   DC01             table_name:MSreplication_options
 ```
 Ahora si nos conectamos a la base de datos podemos observar que son las mismas tablas:
-````bash
+```bash
 SQL (test  dbo@master)> SELECT table_name FROM information_schema.tables WHERE table_type = 'BASE TABLE';
 table_name              
 ---------------------   
