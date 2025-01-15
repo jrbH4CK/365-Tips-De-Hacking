@@ -11,6 +11,7 @@ En este repo quiero contribuir una vez al día, diariamente publicare una técni
 - [Tip 8:  Acceso a cualquier archivo en Windows con SeBackupPrivilege](#tip-8-Acceso-a-cualquier-archivo-en-Windows-con-SeBackupPrivilege)
 - [Tip 9:  Port Forwarding con SSH](#tip-9-port-forwarding-con-ssh)
 - [Tip 10: Fuerza bruta con hydra al protocolo HTTP](#tip-10-fuerza-bruta-con-hydra-al-protocolo-http)
+- [Tip 11: Modulo para MSSSQL en netexec](#tip-11-modulo-para-mssql-en-netexec)
 ## Tip #1: Lectura de archivos desde un XSS
 Al descubrir un XSS se puede realizar la lectura de archivos locales mediante peticiones a un servidor web propio, la idea es enviar el XSS payload a un usuario que si pueda acceder a ciertos archivos del servidor, por ejemplo el archivo .htpasswd, a continuación muestro el payload:
 ```javascript
