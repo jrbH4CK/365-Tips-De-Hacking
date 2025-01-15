@@ -494,3 +494,30 @@ root@pentest:/app/# grep -r password
 Binary file instance/database.db matches
 ```
 ## Tip #12: Modulo para MSSSQL en netexec
+Si obtenemos credenciales del directorio activo se puede intentar realizar consultas a la base de datos con ```netexec```:
+```bash
+┌──(jorge㉿pentest)-[~]
+└─$ nxc mssql 10.10.X.X -u test -p MSSQLP@ssw0rd! -q "SELECT table_name FROM information_schema.tables WHERE table_type = 'BASE TABLE';" --local-auth
+MSSQL       10.10.X.X     1433   DC01             [*] Windows 10 / Server 2019 Build 17763 (name:DC01) (domain:test.local)
+MSSQL       10.10.X.X     1433   DC01             [+] DC01\test:MSSQLP@ssw0rd! (Pwn3d!)
+MSSQL       10.10.X.X     1433   DC01             table_name:spt_fallback_db
+MSSQL       10.10.X.X     1433   DC01             table_name:spt_fallback_dev
+MSSQL       10.10.X.X     1433   DC01             table_name:spt_fallback_usg
+MSSQL       10.10.X.X     1433   DC01             table_name:spt_monitor
+MSSQL       10.10.X.X     1433   DC01             table_name:MSreplication_options
+```
+Ahora si nos conectamos a la base de datos podemos observar que son las mismas tablas:
+````bash
+SQL (test  dbo@master)> SELECT table_name FROM information_schema.tables WHERE table_type = 'BASE TABLE';
+table_name              
+---------------------   
+spt_fallback_db         
+
+spt_fallback_dev        
+
+spt_fallback_usg        
+
+spt_monitor             
+
+MSreplication_options
+```
