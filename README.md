@@ -525,3 +525,4 @@ MSreplication_options
 ```
 ## Tip #13: Cambio de contraseña de usuarios con net
 ## Tip #14: Rutas sensibles de frameworks para aprovechar LFI
+https://cheatsheetseries.owasp.org/cheatsheets/Ruby_on_Rails_Cheat_Sheet.html
