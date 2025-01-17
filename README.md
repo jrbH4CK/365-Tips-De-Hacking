@@ -13,7 +13,7 @@ En este repo quiero contribuir una vez al día, diariamente publicare una técni
 - [Tip 10: Fuerza bruta con hydra al protocolo HTTP](#tip-10-fuerza-bruta-con-hydra-al-protocolo-http)
 - [Tip 11: Busqueda de informacion con grep](#tip-11-busqueda-de-informacion-con-grep)
 - [Tip 12: Modulo para MSSQL en netexec](#tip-12-modulo-para-mssql-en-netexec)
-- [Tip 13: Cambio de contraseña de usuarios con net](#tip-13-cambio-de-contraseña-con-net)
+- [Tip 13: Cambio de contraseña de usuarios con net](#tip-13-cambio-de-contraseña-de-usuarios-con-net)
 - [Tip 14: Rutas sensibles de frameworks](#tip-14-rutas-sensibles-de-frameworks)
 ## Tip #1: Lectura de archivos desde un XSS
 Al descubrir un XSS se puede realizar la lectura de archivos locales mediante peticiones a un servidor web propio, la idea es enviar el XSS payload a un usuario que si pueda acceder a ciertos archivos del servidor, por ejemplo el archivo .htpasswd, a continuación muestro el payload:
