@@ -525,4 +525,6 @@ MSreplication_options
 ```
 ## Tip #13: Cambio de contraseña de usuarios con net
 ## Tip #14: Rutas sensibles de frameworks para aprovechar LFI
+En esta sección solo tratare de actualizar las rutas con archivos que contienen información sensible en caso de obtener un LFI.
+### Ruby on rails
 https://cheatsheetseries.owasp.org/cheatsheets/Ruby_on_Rails_Cheat_Sheet.html
