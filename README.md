@@ -11,7 +11,7 @@ En este repo quiero contribuir una vez al día, diariamente publicare una técni
 - [Tip 8:  Acceso a cualquier archivo en Windows con SeBackupPrivilege](#tip-8-Acceso-a-cualquier-archivo-en-Windows-con-SeBackupPrivilege)
 - [Tip 9:  Port Forwarding con SSH](#tip-9-port-forwarding-con-ssh)
 - [Tip 10: Fuerza bruta con hydra al protocolo HTTP](#tip-10-fuerza-bruta-con-hydra-al-protocolo-http)
-- [Tip 11: Busqueda de informacion con grep](#tip-11-busqueda-de-informacion-con-grep)
+- [Tip 11: Busqueda de informacion con grep](#tip-11-busqueda-de-información-con-grep)
 - [Tip 12: Modulo para MSSQL en netexec](#tip-12-modulo-para-mssql-en-netexec)
 - [Tip 13: Cambio de contraseña de usuarios con net](#tip-13-cambio-de-contraseña-de-usuarios-con-net)
 - [Tip 14: Rutas sensibles de frameworks para aprovechar LFI](#tip-14-rutas-sensibles-de-frameworks-para-aprovechar-lfi)
