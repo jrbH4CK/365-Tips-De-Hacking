@@ -647,3 +647,11 @@ Port 5432 is not serving a web service.
 Checking port 53...
 Port 53 is not serving a web service.
 ```
+Ahora si podemos proceder a realizar un **port forwarding** a los puertos web en busqueda de vulnerabilidades.
+
+## Tip #16: Archivos de configuración de bases de datos
+En esta sección publicare las rutas donde se encuentra el archivo de configuración para realizar la conexión con la base de datos de distintos CMS:
+### LimeSurvey
+```bash
+[limesurvey_installation]/application/config/config.php
+```
