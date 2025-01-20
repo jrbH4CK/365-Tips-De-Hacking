@@ -15,6 +15,8 @@ En este repo quiero contribuir una vez al día, diariamente publicare una técni
 - [Tip 12: Modulo para MSSQL en netexec](#tip-12-modulo-para-mssql-en-netexec)
 - [Tip 13: Cambio de contraseña de usuarios con net](#tip-13-cambio-de-contraseña-de-usuarios-con-net)
 - [Tip 14: Rutas sensibles de frameworks para aprovechar LFI](#tip-14-rutas-sensibles-de-frameworks-para-aprovechar-lfi)
+- [Tip 15: One liner detección de servicios web](#tip-15-one-liner-detección-de-servicios-web)
+- [Tip 16: Archivos de configuración de bases de datos](#tip-16-archivos-de-configuración-de-bases-de-datos)
 ## Tip #1: Lectura de archivos desde un XSS
 Al descubrir un XSS se puede realizar la lectura de archivos locales mediante peticiones a un servidor web propio, la idea es enviar el XSS payload a un usuario que si pueda acceder a ciertos archivos del servidor, por ejemplo el archivo .htpasswd, a continuación muestro el payload:
 ```javascript
