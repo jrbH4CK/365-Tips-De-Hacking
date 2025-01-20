@@ -17,6 +17,10 @@ En este repo quiero contribuir una vez al día, diariamente publicare una técni
 - [Tip 14: Rutas sensibles de frameworks para aprovechar LFI](#tip-14-rutas-sensibles-de-frameworks-para-aprovechar-lfi)
 - [Tip 15: One liner detección de servicios web](#tip-15-one-liner-detección-de-servicios-web)
 - [Tip 16: Archivos de configuración de bases de datos](#tip-16-archivos-de-configuración-de-bases-de-datos)
+- [Tip 17: Generar una shell interactiva en linux](#tip-17-generar-una-shell-interactiva-en-linux)
+- [Tip 18: Generar una reverse shell para Windows](#tip-18-generar-una-reverse-shell-para-windows)
+- [Tip 19: Transferencia de archivos en Windows](#tip-19-transferencia-de-archivos-en-windows)
+- [Tip 20: Transferencia de archivos en Linux](#tip-20-transferencia-de-archivos-en-linux)
 ## Tip #1: Lectura de archivos desde un XSS
 Al descubrir un XSS se puede realizar la lectura de archivos locales mediante peticiones a un servidor web propio, la idea es enviar el XSS payload a un usuario que si pueda acceder a ciertos archivos del servidor, por ejemplo el archivo .htpasswd, a continuación muestro el payload:
 ```javascript
