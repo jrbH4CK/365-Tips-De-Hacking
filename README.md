@@ -655,3 +655,7 @@ En esta sección publicare las rutas donde se encuentra el archivo de configurac
 ```bash
 [limesurvey_installation]/application/config/config.php
 ```
+## Tip #17: Generar una shell interactiva en linux
+## Tip #18: Generar una reverse shell para Windows
+## Tip #19: Transferencia de archivos en Windows
+## Tip #20: Transferencia de archivos en Linux
