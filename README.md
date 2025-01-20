@@ -538,3 +538,112 @@ net rpc password "TargetUser" "newP@ssword2022" -U "DOMAIN"/"ControlledUser"%"Pa
 En esta sección solo tratare de actualizar las rutas con archivos que contienen información sensible en caso de obtener un LFI.
 ### Ruby on rails
 https://cheatsheetseries.owasp.org/cheatsheets/Ruby_on_Rails_Cheat_Sheet.html
+## Tip #15: One liner detección de servicios web
+Cuando estemos dentro de una maquina y veamos muchos puertos locales abiertos según nuestro **Tip #3** se puede detectar que puertos pertenecen a servicios web con un one liner.
+### Tip #3 en acción:
+```bash
+rony@test$ netstat -tln
+Active Internet connections (only servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0      0 0.0.0.0:22              0.0.0.0:*               LISTEN     
+tcp        0      0 0.0.0.0:80              0.0.0.0:*               LISTEN     
+tcp        0      0 127.0.0.1:8600          0.0.0.0:*               LISTEN     
+tcp        0      0 127.0.0.1:8500          0.0.0.0:*               LISTEN     
+tcp        0      0 127.0.0.1:8503          0.0.0.0:*               LISTEN     
+tcp        0      0 127.0.0.1:8300          0.0.0.0:*               LISTEN     
+tcp        0      0 127.0.0.1:8301          0.0.0.0:*               LISTEN     
+tcp        0      0 127.0.0.1:8302          0.0.0.0:*               LISTEN     
+tcp        0      0 127.0.0.1:3000          0.0.0.0:*               LISTEN     
+tcp        0      0 127.0.0.1:3001          0.0.0.0:*               LISTEN     
+tcp        0      0 127.0.0.1:5432          0.0.0.0:*               LISTEN     
+tcp        0      0 127.0.0.53:53           0.0.0.0:*               LISTEN
+```
+### One liner
+Como se puede observar en el comando anterior existen muchisimos puertos, para identificar que puertos pertenecen a servicios web utilizaremos este one liner creado por mi:
+```bash
+netstat -tln | awk '/LISTEN/ {split($4, a, ":"); print a[length(a)]}' | while read port; do echo "Checking port $port..."; curl -s --connect-timeout 2 -I http://127.0.0.1:$port >/dev/null && echo "Port $port is serving a web service." && curl -L -I http://127.0.0.1:$port|| echo "Port $port is not serving a web service."; echo "";done
+```
+Y se obtiene el siguiente resultado:
+```bash
+Checking port 22...
+Port 22 is not serving a web service.
+
+Checking port 80...
+Port 80 is serving a web service.
+HTTP/1.1 301 Moved Permanently
+Server: nginx/1.18.0 (Ubuntu)
+Date: Mon, 20 Jan 2025 16:30:00 GMT
+Content-Type: text/html
+Content-Length: 178
+Connection: keep-alive
+Location: http://test.local/
+
+HTTP/1.1 200 OK
+Server: nginx/1.18.0 (Ubuntu)
+Date: Mon, 20 Jan 2025 16:30:00 GMT
+Content-Type: text/html; charset=UTF-8
+Content-Length: 1672
+Connection: keep-alive
+X-Powered-By: Express
+Accept-Ranges: bytes
+ETag: W/"688-tXvhf50YN65CYe3Yig9BzxwgBsg"
+Vary: Accept-Encoding
+
+
+Checking port 8600...
+Port 8600 is not serving a web service.
+
+Checking port 8500...
+Port 8500 is serving a web service.
+HTTP/1.1 301 Moved Permanently
+Content-Type: text/html; charset=utf-8
+Location: /ui/
+Date: Mon, 20 Jan 2025 16:30:02 GMT
+
+HTTP/1.1 200 OK
+Accept-Ranges: bytes
+Content-Length: 980373
+Content-Type: text/html; charset=utf-8
+Date: Mon, 20 Jan 2025 16:30:02 GMT
+
+
+Checking port 8503...
+Port 8503 is not serving a web service.
+
+Checking port 8300...
+Port 8300 is not serving a web service.
+
+Checking port 8301...
+Port 8301 is not serving a web service.
+
+Checking port 8302...
+Port 8302 is not serving a web service.
+
+Checking port 3000...
+Port 3000 is serving a web service.
+HTTP/1.1 200 OK
+X-Powered-By: Express
+Accept-Ranges: bytes
+Content-Type: text/html; charset=UTF-8
+Content-Length: 1672
+ETag: W/"688-tXvhf50YN65CYe3Yig9BzxwgBsg"
+Vary: Accept-Encoding
+Date: Mon, 20 Jan 2025 16:30:02 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+
+Checking port 3001...
+Port 3001 is serving a web service.
+HTTP/1.1 403 Forbidden
+content-type: text/html; charset=UTF-8
+vary: Origin
+Content-Length: 0
+
+
+Checking port 5432...
+Port 5432 is not serving a web service.
+
+Checking port 53...
+Port 53 is not serving a web service.
+```
