@@ -24,6 +24,7 @@ En este repo quiero contribuir una vez al día, diariamente publicare una técni
 - [Tip 21: De inyección SQL a RCE](#tip-21-de-inyección-sql-a-rce)
 - [Tip 22: Acceso a una maquina mediante autorized_keys](#tip-22-acceso-a-una-maquina-mediante-autorized-keys)
 - [Tip 23: Abuso de SUID para escalar privilegios](#tip-23-abuso-de-suid-para-escalar-privilegios)
+- [Tip 24: Patrones personalizados en Hashcat](#tip-24-patrones-personalizados-en-hashcat)
 ## Tip #1: Lectura de archivos desde un XSS
 Al descubrir un XSS se puede realizar la lectura de archivos locales mediante peticiones a un servidor web propio, la idea es enviar el XSS payload a un usuario que si pueda acceder a ciertos archivos del servidor, por ejemplo el archivo .htpasswd, a continuación muestro el payload:
 ```javascript
