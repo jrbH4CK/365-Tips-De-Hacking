@@ -22,7 +22,7 @@ En este repo quiero contribuir una vez al día, diariamente publicare una técni
 - [Tip 19: Transferencia de archivos en Windows](#tip-19-transferencia-de-archivos-en-windows)
 - [Tip 20: Transferencia de archivos en Linux](#tip-20-transferencia-de-archivos-en-linux)
 - [Tip 21: De inyección SQL a RCE](#tip-21-de-inyección-sql-a-rce)
-- [Tip 22: Acceso a una maquina mediante autorized_keys](#tip-22-acceso-a-una-maquina-mediante-autorized-keys)
+- [Tip 22: Acceso a una maquina mediante autorized_keys](#tip-22-acceso-a-una-maquina-mediante-autorized_keys)
 - [Tip 23: Abuso de SUID para escalar privilegios](#tip-23-abuso-de-suid-para-escalar-privilegios)
 - [Tip 24: Patrones personalizados en Hashcat](#tip-24-patrones-personalizados-en-hashcat)
 - [Tip 25: Port forwarding en Windows con chisel](#tip-25-port-forwarding-en-Windows-con-chisel)
@@ -825,7 +825,7 @@ Speed.#1.........: 99074.4 kH/s (2.14ms) @ Accel:512 Loops:95 Thr:1 Vec:8
 Recovered........: 1/1 (100.00%) Digests (total), 1/1 (100.00%) Digests (new)
 ```
 ## Tip #25: Port forwarding en Windows con chisel
-En ocaciones logramos entablar conexion con una maquina remota que corre Windows, siguiento el concepto del **tip #9** buscaremos acceder a servicios que corren en puertos internos, sin embargo que probable que no contemos con SSH, por que utilizaremos chisel, esta disponible en esta repo -> https://github.com/jpillora/chisel. los comandos a ejecutar son los siguientes:
+En ocaciones logramos entablar conexion con una maquina remota que corre Windows, siguiento el concepto del **tip #9** buscaremos acceder a servicios que corren en puertos internos, sin embargo que probable que no contemos con SSH, por que utilizaremos chisel, esta disponible en esta repo -> https://github.com/jpillora/chisel; los comandos a ejecutar son los siguientes:
 ### Maquina victima
 
 ### Maquina atacante
