@@ -834,5 +834,10 @@ Recovered........: 1/1 (100.00%) Digests (total), 1/1 (100.00%) Digests (new)
 ## Tip #25: Port forwarding en Windows con chisel
 En ocaciones logramos entablar conexion con una maquina remota que corre Windows, siguiento el concepto del **tip #9** buscaremos acceder a servicios que corren en puertos internos, sin embargo que probable que no contemos con SSH, por que utilizaremos chisel, esta disponible en esta repo -> https://github.com/jpillora/chisel; los comandos a ejecutar son los siguientes:
 ### Maquina victima
-
+```bash
+C:\Temp> .\chisel.exe server -p 1234
+```
 ### Maquina atacante
+```
+./chisel client <ip-victima>:1234 <puerto-local>:<ip-victima>:<puerto-victima>
+```
