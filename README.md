@@ -27,6 +27,7 @@ En este repo quiero contribuir una vez al día, diariamente publicare una técni
 - [Tip 24: Patrones personalizados en Hashcat](#tip-24-patrones-personalizados-en-hashcat)
 - [Tip 25: Port forwarding en Windows con chisel](#tip-25-port-forwarding-en-Windows-con-chisel)
 - [Tip 26: Detectar procesos ejecutados en intervalos de tiempo](#tip-26-detectar-procesos-ejecutados-en-intervalos-de-tiempo)
+- [Tip 27: PHP wrappers](#tip-27-php-wrappers)
 ## Tip #1: Lectura de archivos desde un XSS
 Al descubrir un XSS se puede realizar la lectura de archivos locales mediante peticiones a un servidor web propio, la idea es enviar el XSS payload a un usuario que si pueda acceder a ciertos archivos del servidor, por ejemplo el archivo .htpasswd, a continuación muestro el payload:
 ```javascript
@@ -842,3 +843,5 @@ C:\Temp> .\chisel.exe server -p 1234
 ```
 ./chisel client <ip-victima>:1234 <puerto-local>:<ip-victima>:<puerto-victima>
 ```
+## Tip #26: Detectar procesos ejecutados en intervalos de tiempo
+## Tip #27: PHP wrappers
