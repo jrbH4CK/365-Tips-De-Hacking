@@ -29,6 +29,9 @@ En este repo quiero contribuir una vez al día, diariamente publicare una técni
 - [Tip 26: Detectar procesos ejecutados en intervalos de tiempo](#tip-26-detectar-procesos-ejecutados-en-intervalos-de-tiempo)
 - [Tip 27: PHP wrappers](#tip-27-php-wrappers)
 - [Tip 28: Sincroniza el reloj con el servidor remoto](#tip-28-sincroniza-el-reloj-con-el-servidor-remoto)
+- [Tip 29: Crear entornos virtuales en python para ejecutar scripts](#tip-29-crear-entornos-virtuales-en-python-para-ejecutar-scripts)
+- [Tip 30: Obtener las interfaces de red de una maquina remota](#tip-30-obtener-las-interfaces-de-red-de-una-maquina-remota)
+- [Tip 31: Escaneo de puertos con binarios estaticos](#tip-31-escaneo-de-puertos-con-binarios-estaticos)
 ## Tip #1: Lectura de archivos desde un XSS
 Al descubrir un XSS se puede realizar la lectura de archivos locales mediante peticiones a un servidor web propio, la idea es enviar el XSS payload a un usuario que si pueda acceder a ciertos archivos del servidor, por ejemplo el archivo .htpasswd, a continuación muestro el payload:
 ```javascript
