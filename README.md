@@ -28,7 +28,7 @@ En este repo quiero contribuir una vez al día, diariamente publicare una técni
 - [Tip 25: Port forwarding en Windows con chisel](#tip-25-port-forwarding-en-Windows-con-chisel)
 - [Tip 26: Detectar procesos ejecutados en intervalos de tiempo](#tip-26-detectar-procesos-ejecutados-en-intervalos-de-tiempo)
 - [Tip 27: PHP wrappers](#tip-27-php-wrappers)
-- [Tip 28: Sincroniza el reloj con el servidor remoto](#sincroniza-el-reloj-con-el-servidor-remoto)
+- [Tip 28: Sincroniza el reloj con el servidor remoto](#tip-28-sincroniza-el-reloj-con-el-servidor-remoto)
 ## Tip #1: Lectura de archivos desde un XSS
 Al descubrir un XSS se puede realizar la lectura de archivos locales mediante peticiones a un servidor web propio, la idea es enviar el XSS payload a un usuario que si pueda acceder a ciertos archivos del servidor, por ejemplo el archivo .htpasswd, a continuación muestro el payload:
 ```javascript
@@ -964,7 +964,7 @@ Este tip facilmente será el mas sencillo de realizar pero a la vez muy importan
 ```
 Este error ocurre porque hay que recordar que todos los Tickets en kerberos utilizan los ```Timestamps``` para ser cifrados, si el reloj del servidor y el de nuestra maquina no es el mismo estos ```Timestamps``` no coincidiran, para arreglar el problema anterior basta con utilizar el comando ```ntpdate <ip>```:
 ```bash
-┌──(jorge㉿pentest)-[~/HTB/Certified]
+┌──(jorge㉿pentest)-[~]
 └─$ sudo ntpdate 10.10.51.117
 [sudo] password for jorge: 
 2025-01-29 05:34:52.695620 (-0600) +25249.897232 +/- 0.040491 10.10.11.41 s1 no-leap
