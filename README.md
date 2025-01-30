@@ -973,3 +973,35 @@ Este error ocurre porque hay que recordar que todos los Tickets en kerberos util
 2025-01-29 05:34:52.695620 (-0600) +25249.897232 +/- 0.040491 10.10.11.41 s1 no-leap
 CLOCK: time stepped by 25249.897232
 ```
+## Tip #29: Crear entornos virtuales en python para ejecutar scripts
+Cuando identificamos una vulnerabilidad y encontramos algún poc en github programado en python es probable que se necesite de ciertas librerias que comunmente vienen en el archivo ```requeriments.txt```, en los nuevos entornos de kali no se puede manejar como antes se hacia, a continuacio el ejemplo:
+```bash
+┌──(jorge㉿pentest)-[~/proyecto]
+└─$ pip3 install -r requirements.txt 
+error: externally-managed-environment
+```
+Para poder ejecutar nuestro script sin problemas necesitaremos de un entorno virtual, esto es la reserva de un espacio de memoria donde se instalar las librerias sin que existe una interferencia entre las que ya tenemos instaladas, para hacerlo debemos seguir los siguientes comandos:
+```bash
+┌──(jorge㉿pentest)-[~/proyecto]
+└─$ python3 -m venv mi_entorno        
+                                                                                                                                                                      
+┌──(jorge㉿pentest)-[~/proyecto]
+└─$ virtualenv mi_entorno
+created virtual environment CPython3.12.6.final.0-64 in 310ms
+  creator CPython3Posix(dest=/home/jorge/proyecto/mi_entorno, clear=False, no_vcs_ignore=False, global=False)
+  seeder FromAppData(download=False, pip=bundle, via=copy, app_data_dir=/home/jorge/.local/share/virtualenv)
+    added seed packages: pip==24.2
+  activators BashActivator,CShellActivator,FishActivator,NushellActivator,PowerShellActivator,PythonActivator
+                                                                                                                                                                      
+┌──(jorge㉿pentest)-[~/proyecto]
+└─$ source mi_entorno/bin/activate
+                                                                                                                                                                      
+┌──(mi_entorno)─(jorge㉿pentest)-[~/proyecto]
+└─$ pip3 install -r requirements.txt 
+Collecting argparse (from -r requirements.txt (line 1))
+  Downloading argparse-1.4.0-py2.py3-none-any.whl.metadata (2.8 kB)
+
+Installing collected packages: argparse
+Successfully installed argparse-1.4.0 
+```
+Ahora si podemos ejecutar nuestro script con todas las librerias necesarias.
