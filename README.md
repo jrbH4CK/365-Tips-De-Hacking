@@ -1005,3 +1005,30 @@ Installing collected packages: argparse
 Successfully installed argparse-1.4.0 
 ```
 Ahora si podemos ejecutar nuestro script con todas las librerias necesarias.
+
+## Tip #30: Obtener las interfaces de red de una maquina remota
+Cuando obtemos acceso a una maquina, ya sea por SSH o por un RCE podemos observar las interfaces de red que utiliza, esto es util para poder usar la maquina de pivote, para hacerlo utilizaremos comandos muy basicos:
+### Direcciones IP
+```bash
+test@vuln:~$ ip address
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+2: eth0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc mq state UP group default qlen 1000
+    link/ether 00:50:56:b0:7d:9c brd ff:ff:ff:ff:ff:ff
+    altname enp3s0
+    altname ens160
+    inet 10.10.X.X/X brd 10.10.X.X scope global eth0
+       valid_lft forever preferred_lft forever
+3: docker0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP group default 
+    link/ether 02:42:cf:c3:a2:db brd ff:ff:ff:ff:ff:ff
+    inet 172.17.X.X/X brd 172.17.255.255 scope global docker0
+       valid_lft forever preferred_lft forever
+```
+### Comando ls
+```bash
+test@vuln:~$ ls /sys/class/net/
+docker0  eth0  lo  
+```
+Como se puede observar existe una interfaz de docker, en ella podremos buscar por IP activas en busca de escalar privilegios.
