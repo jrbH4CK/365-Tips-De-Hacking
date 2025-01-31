@@ -1075,7 +1075,7 @@ Cuando accedemos a una maquina victima y observarmos que tiene interfaces difere
 Como primer paso hay que descargar el binario para el tipo de sistema en el que utilizaremos el binario, puedes entontrarlos aqui -> https://github.com/andrew-d/static-binaries/tree/master/binaries, despues lo tenemos que enviar a la maquina remota con alguno de los tips que ya hemos visto de transferencia de archivos.
 
 Una vez tenemos el binario en la maquina remota debemos cambiar los permisos de ejecucion:
-````bash
+```bash
 test@vuln:/tmp$ chmod +x nmap
 ```
 Y lo ejecutamos sobre la interfaz encontrada en el tip pasado:
@@ -1096,7 +1096,7 @@ Como se puede observar podemos hacer uso de ```nmap``` en la maquina remota, ya 
 
 ### fscan
 Fscan es una herramienta de reconocimiento, que entre otras cosas puede detectar los hosts activos, esta herramienta esta disponible aqui -> https://github.com/shadow1ng/fscan?tab=readme-ov-file, solo queda ejecutarla sobre la interfaz encontrada en el tip anterior:
-````bash
+```bash
 test@vuln:/tmp$ ./fscan -h 172.17.0.0/24
 
    ___                              _    
