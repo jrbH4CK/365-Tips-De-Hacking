@@ -1059,7 +1059,7 @@ test@vuln:~$ ip address
        valid_lft forever preferred_lft forever
 3: docker0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP group default 
     link/ether 02:42:cf:c3:a2:db brd ff:ff:ff:ff:ff:ff
-    inet 172.17.X.X/X brd 172.17.255.255 scope global docker0
+    inet 172.17.0.1/24 brd 172.17.0.255 scope global docker0
        valid_lft forever preferred_lft forever
 ```
 ### Comando ls
@@ -1068,3 +1068,48 @@ test@vuln:~$ ls /sys/class/net/
 docker0  eth0  lo  
 ```
 Como se puede observar existe una interfaz de docker, en ella podremos buscar por IP activas en busca de escalar privilegios.
+
+## Tip #31: Escaneo de puertos con binarios estaticos
+Cuando accedemos a una maquina victima y observarmos que tiene interfaces diferentes a la que tenemos alcance, podemos hacer dos cosas, generar pivoteo como en los tips anteriores para escanear host activos y puertos o podemos utilizar scripts estaticos para hacerlo sin generar conexiones que pueden ser detectadas por los sitemas de seguridad, aqui pondre el tipico ```nmap``` y ```fscan```, este ultimo una herramienta escrita en lenguaje Go:
+### nmap
+Como primer paso hay que descargar el binario para el tipo de sistema en el que utilizaremos el binario, puedes entontrarlos aqui -> https://github.com/andrew-d/static-binaries/tree/master/binaries, despues lo tenemos que enviar a la maquina remota con alguno de los tips que ya hemos visto de transferencia de archivos.
+
+Una vez tenemos el binario en la maquina remota debemos cambiar los permisos de ejecucion:
+````bash
+test@vuln:/tmp$ chmod +x nmap
+```
+Y lo ejecutamos sobre la interfaz encontrada en el tip pasado:
+```bash
+test@vuln:/tmp$ ./nmap -sn 172.17.0.0/24
+
+Starting Nmap 6.49BETA1 ( http://nmap.org ) at 2025-01-31 18:42 UTC
+Cannot find nmap-payloads. UDP payloads are disabled.
+Stats: 0:00:14 elapsed; 0 hosts completed (0 up), 256 undergoing Ping Scan
+Parallel DNS resolution of 256 hosts. Timing: About 0.00% done
+Nmap scan report for 172.17.0.1
+Host is up (0.00054s latency).
+Nmap scan report for 172.17.0.2
+Host is up (0.00037s latency).
+Nmap done: 256 IP addresses (2 hosts up) scanned in 16.01 seconds
+```
+Como se puede observar podemos hacer uso de ```nmap``` en la maquina remota, ya se puede escanear por puertos abiertos en los hosts activos.
+
+### fscan
+Fscan es una herramienta de reconocimiento, que entre otras cosas puede detectar los hosts activos, esta herramienta esta disponible aqui -> https://github.com/shadow1ng/fscan?tab=readme-ov-file, solo queda ejecutarla sobre la interfaz encontrada en el tip anterior:
+````bash
+test@vuln:/tmp$ ./fscan -h 172.17.0.0/24
+
+   ___                              _    
+  / _ \     ___  ___ _ __ __ _  ___| | __ 
+ / /_\/____/ __|/ __| '__/ _` |/ __| |/ /
+/ /_\\_____\__ \ (__| | | (_| | (__|   <    
+\____/     |___/\___|_|  \__,_|\___|_|\_\   
+                     fscan version: 1.8.4
+start infoscan
+trying RunIcmp2
+The current user permissions unable to send icmp packets
+start ping
+(icmp) Target 172.17.0.1      is alive
+(icmp) Target 172.17.0.2      is alive
+```
+Al igual que ```nmap```, ```fscan``` puede escanear por puertos abiertos en un host, solo hay que ir a la documentación para obtener los comandos.
