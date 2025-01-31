@@ -670,6 +670,10 @@ En esta sección publicare las rutas donde se encuentra el archivo de configurac
 ```bash
 [prestashop_installation]/app/config/parameters.php
 ```
+### WordPress
+```bash
+[root_installation]/wp-config.php
+```
 ## Tip #17: Generar una shell interactiva en Linux
 Cuando obtenemos una reverse shell debido a una vulnerabilidad en un sistema Linux, esta shell no es interactiva, es decir, no se pueden usar opciones como ir hacia arriba para comandos anteriores, Ctl+C para interrumpir un script, etc. para lograr que la shell se comporte como nativa necesitamos ejecutar ciertos comandos:
 ### Creacion del script
