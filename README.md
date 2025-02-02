@@ -32,6 +32,7 @@ En este repo quiero contribuir una vez al día, diariamente publicare una técni
 - [Tip 29: Crear entornos virtuales en python para ejecutar scripts](#tip-29-crear-entornos-virtuales-en-python-para-ejecutar-scripts)
 - [Tip 30: Obtener las interfaces de red de una maquina remota](#tip-30-obtener-las-interfaces-de-red-de-una-maquina-remota)
 - [Tip 31: Escaneo de puertos con binarios estaticos](#tip-31-escaneo-de-puertos-con-binarios-estaticos)
+- [Tip 32: Obtener hash NTLMv2 del usuario manejador de la base de datos](#tip-32-obtener-hash-ntlmv2-del-usuario-manejador-de-la-base-de-datos)
 ## Tip #1: Lectura de archivos desde un XSS
 Al descubrir un XSS se puede realizar la lectura de archivos locales mediante peticiones a un servidor web propio, la idea es enviar el XSS payload a un usuario que si pueda acceder a ciertos archivos del servidor, por ejemplo el archivo .htpasswd, a continuación muestro el payload:
 ```javascript
