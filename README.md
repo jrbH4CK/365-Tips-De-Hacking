@@ -1118,3 +1118,4 @@ start ping
 (icmp) Target 172.17.0.2      is alive
 ```
 Al igual que ```nmap```, ```fscan``` puede escanear por puertos abiertos en un host, solo hay que ir a la documentación para obtener los comandos.
+## Tip #32: Obtener hash NTLMv2 del usuario manejador de la base de datos
