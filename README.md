@@ -1123,3 +1123,6 @@ start ping
 ```
 Al igual que ```nmap```, ```fscan``` puede escanear por puertos abiertos en un host, solo hay que ir a la documentación para obtener los comandos.
 ## Tip #32: Obtener hash NTLMv2 del usuario manejador de la base de datos
+
+## Tip #34: Lectura de logs mediante el grupo adm
+Generalmente los miembros del grupo ```adm``` tienen permiso de lectura sobre los logs del sistema encontrados en ````/var/log```, si el usuario comprometido pertenece al grupo vale la pena revisar los logs, en especial si se tienen servicios web corrientdo, ya que en las peticiones se pueden quedar almacenadas cuentas de usuario.
