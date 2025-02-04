@@ -36,6 +36,7 @@ En este repo quiero contribuir una vez al día, diariamente publicare una técni
 - [Tip 33: Stored XSS en el nombre de usuario](#tip-33-stored-xss-en-el-nombre-de-usuario)
 - [Tip 34: Lectura de logs mediante el grupo adm](#lectura-de-logs-mediante-el-grupo-adm)
 - [Tip 35: Promp completo de SQLMap para testear los parametros enviados en el body de la petición](#tip-35-Promp-completo-de-SQLMap-para-testear-los-parametros-enviados-en-el-body-de-la-petición)
+- [Tip 36: Grupos potencialmente explotables en Linux](#tip-36-grupos-potencialmente-explotables-en-linux)
 ## Tip #1: Lectura de archivos desde un XSS
 Al descubrir un XSS se puede realizar la lectura de archivos locales mediante peticiones a un servidor web propio, la idea es enviar el XSS payload a un usuario que si pueda acceder a ciertos archivos del servidor, por ejemplo el archivo .htpasswd, a continuación muestro el payload:
 ```javascript
