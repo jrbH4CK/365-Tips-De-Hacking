@@ -1124,5 +1124,12 @@ start ping
 Al igual que ```nmap```, ```fscan``` puede escanear por puertos abiertos en un host, solo hay que ir a la documentación para obtener los comandos.
 ## Tip #32: Obtener hash NTLMv2 del usuario manejador de la base de datos
 Si en algun momento determinado se obtiene una inyección SQL o acceso a MSSQL server, se puede obtener el hash NTLMv2 del usuario que este activo en la base de datos mediante el uso del modulo ```xp_dirtree```:
+## Tip #33: Stored XSS en el nombre de usuario
+En ocaciones al crear cuentas de usuarios es viable introducir un payload de XSS como nombre de usuario, en caso de que no se haga la validación, podremos obtener un stored XSS, por ejemplo un caso real es este reporte en hackerone -> https://hackerone.com/reports/196989
 ## Tip #34: Lectura de logs mediante el grupo adm
 Generalmente los miembros del grupo ```adm``` tienen permiso de lectura sobre los logs del sistema encontrados en ```/var/log```, si el usuario comprometido pertenece al grupo vale la pena revisar los logs, en especial si se tienen servicios web corrientdo, ya que en las peticiones se pueden quedar almacenadas cuentas de usuario.
+## Tip #35: Promp completo de SQLMap para testear los parametros enviados en el body de la petición
+Generalmente SQL Map busca las inyecciones en los parametros de la URL, por ejemplo ```http://test.local/inventario?prodId=1&prodName=shirt```, pero en ocaciones ocurre que esos parametros son enviados en el body de la petición POST por lo que hay que especificarlos con el parametro --data:
+```bash
+sqlmap -u "http://test.local/inventario.php" --data "prodId=1&prodName=shirt" -p prodId --level=5 --risk=3
+```
